@@ -1,0 +1,20 @@
+{
+  "name": "lynjs",
+  "version": "0.0.0",
+  "private": false,
+  "type": "module",
+  "workspaces": [
+    "packages/*"
+  ],
+  "exports": {},
+  "sideEffects": false,
+  "scripts": {
+    "build": "echo \"(root) nothing to build yet\"",
+    "clean": "git clean -fdX -e node_modules",
+    "test": "echo \"(root) no tests yet\" && exit 0"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
+
