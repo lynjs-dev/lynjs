@@ -10,13 +10,40 @@
   ],
   "sideEffects": false,
   "scripts": {
+    "__comment_publish__": "",
     "verify:pack": "npm pack --dry-run",
-    "prepublishOnly": "npm run verify:pack"
+    "prepublishOnly": "npm run verify:pack",
+    "__comment_eslint__": "",
+    "lint": "eslint . --ext .ts,.tsx,.js,.cjs --report-unused-disable-directives",
+    "lint:fix": "npm run lint -- --fix",
+    "format": "prettier . --check",
+    "format:fix": "prettier . --write",
+    "lint:ws": "npm run lint -ws --if-present",
+    "format:ws": "npm run format -ws --if-present",
+    "prepare": "husky"
   },
   "engines": {
     "node": ">=18"
   },
   "publishConfig": {
     "access": "public"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.34.0",
+    "eslint": "^9.34.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.4",
+    "husky": "^9.1.7",
+    "lint-staged": "^15.5.2",
+    "typescript-eslint": "^8.42.0"
+  },
+  "lint-staged": {
+    "*.{js,cjs,ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md,yml,yaml}": [
+      "prettier --write"
+    ]
   }
 }
