@@ -1,7 +1,4 @@
-node_modules
-dist
-coverage
+**/node_modules/**
+**/dist/**
+**/coverage/**
 CHANGELOG.md
-packages/**/dist
-packages/**/coverage
-

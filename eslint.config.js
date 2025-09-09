@@ -1,7 +1,8 @@
-// eslint.config.js
+import { cwd } from 'node:process';
 import js from '@eslint/js';
 import ts from 'typescript-eslint';
 import prettier from 'eslint-config-prettier';
+import eslintPluginPrettier from 'eslint-plugin-prettier';
 
 export default [
   // Base JavaScript recommended rules
@@ -16,19 +17,22 @@ export default [
   {
     // Common ignore settings
     ignores: [
-      'node_modules',
-      'dist',
-      'coverage',
+      '**/node_modules/**',
+      '**/dist/**',
+      '**/coverage/**',
       '**/*.d.ts',
-      '*.config.js',
-      '*.config.cjs',
-      'packages/**/dist',
-      'packages/**/coverage',
+      // 설정 파일 전역 무시(원하면 유지)
+      // '**/*.config.js',
+      // '**/*.config.cjs',
+      // '**/*.config.mjs',
     ],
+  },
 
+  {
+    plugins: { prettier: eslintPluginPrettier },
     rules: {
       // Prettier integration: show style issues as warnings only
-      'prettier/prettier': 'warn',
+      'prettier/prettier': 'error',
 
       // Error on unused variables, but allow those starting with "_"
       '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }],
@@ -39,24 +43,15 @@ export default [
   },
 
   {
-    // JS, CJS files
-    files: ['**/*.js', '**/*.cjs'],
-    languageOptions: {
-      sourceType: 'module',
-      ecmaVersion: 'latest',
-    },
-  },
-
-  {
-    // TS, TSX files
-    files: ['**/*.ts', '**/*.tsx'],
+    files: ['{src,packages/*}/**/*.{ts,tsx}'],
     languageOptions: {
       parser: ts.parser,
       parserOptions: {
-        ecmaVersion: 'latest',
-        sourceType: 'module',
-        // For type-aware linting, specify tsconfig here
-        // project: "./tsconfig.json"
+        project: [
+          './tsconfig.json', // 루트
+          './packages/*/tsconfig.json', // 모든 패키지
+        ],
+        tsconfigRootDir: cwd(),
       },
     },
   },

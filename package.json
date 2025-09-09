@@ -3,7 +3,6 @@
   "version": "0.0.2-next.2",
   "private": false,
   "type": "module",
-  "exports": {},
   "files": [
     "README.md",
     "LICENSE"
@@ -14,16 +13,18 @@
     "verify:pack": "npm pack --dry-run",
     "prepublishOnly": "npm run verify:pack",
     "__comment_eslint__": "",
-    "lint": "eslint . --ext .ts,.tsx,.js,.cjs --report-unused-disable-directives",
-    "lint:fix": "npm run lint -- --fix",
-    "format": "prettier . --check",
-    "format:fix": "prettier . --write",
+    "lint": "eslint --ext .ts,.tsx,.js,.cjs --report-unused-disable-directives --cache",
+    "lint:all": "eslint . --ext .ts,.tsx,.js,.cjs --report-unused-disable-directives --cache",
+    "lint:fix": "npm run lint -- --fix --max-warnings=0",
+    "format": "prettier . --check --cache",
+    "format:fix": "prettier . --write --cache",
     "lint:ws": "npm run lint -ws --if-present",
     "format:ws": "npm run format -ws --if-present",
     "prepare": "husky"
   },
   "engines": {
-    "node": ">=18"
+    "node": ">=18",
+    "npm": ">=10"
   },
   "publishConfig": {
     "access": "public"
@@ -35,15 +36,15 @@
     "eslint-plugin-prettier": "^5.5.4",
     "husky": "^9.1.7",
     "lint-staged": "^15.5.2",
+    "prettier": "^3.6.2",
     "typescript-eslint": "^8.42.0"
   },
   "lint-staged": {
-    "*.{js,cjs,ts,tsx}": [
-      "eslint --fix",
-      "prettier --write"
+    "*.{ts,tsx,js,cjs,mjs}": [
+      "npm run lint:fix"
     ],
-    "*.{json,md,yml,yaml}": [
-      "prettier --write"
+    "*.{json,yml,yaml,css,scss,html,md}": [
+      "npm run format:fix"
     ]
   }
 }
