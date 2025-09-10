@@ -1,6 +1,2 @@
-#!/usr/bin/env sh
-. "$(dirname -- "$0")/_/husky.sh"
-
-# npx 실행 시 로컬 설치본 사용, 설치 시도 막기
 npx --no-install commitlint --edit "$1"
 
