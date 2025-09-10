@@ -1,3 +1,9 @@
+## 1.0.0-next.2 (2025-09-10)
+
+* fix: change .github/workflows/release.yml ([d5b2058](https://github.com/mogiya/test-project/commit/d5b2058))
+* fix: change .husky/commit-msg ([91e05ae](https://github.com/mogiya/test-project/commit/91e05ae))
+* fix: turn off husky on CI ([985b93a](https://github.com/mogiya/test-project/commit/985b93a))
+
 ## 1.0.0-next.1 (2025-09-10)
 
 * fix: husky ([ae4c268](https://github.com/mogiya/test-project/commit/ae4c268))
