@@ -42,9 +42,6 @@ tmp/
 
 # Package manager specific
 .pnpm-debug.log*
-package-lock.json
-yarn.lock
-pnpm-lock.yaml
 
 # Vitest / Jest cache
 .vitest/
