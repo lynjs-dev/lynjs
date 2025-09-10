@@ -57,3 +57,6 @@ pnpm-lock.yaml
 .cache/
 .parcel-cache/
 
+# Only ignore npm pack tarballs
+lynjs-*.tgz
+
