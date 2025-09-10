@@ -1,6 +1,10 @@
 {
-  "name": "@fake/test-project",
+  "name": "@moe.js/test-project",
   "version": "0.0.2-next.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mogiya/test-project.git"
+  },
   "private": false,
   "type": "module",
   "exports": {},
@@ -10,13 +14,28 @@
   ],
   "sideEffects": false,
   "scripts": {
+    "test": "echo \"(root) no tests yet\" && exit 0",
     "verify:pack": "npm pack --dry-run",
-    "prepublishOnly": "npm run verify:pack"
+    "prepublishOnly": "npm run verify:pack",
+    "semantic-release": "semantic-release",
+    "prepare": "husky"
   },
   "engines": {
     "node": ">=18"
   },
   "publishConfig": {
     "access": "public"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^19.8.1",
+    "@commitlint/config-conventional": "^19.8.1",
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/commit-analyzer": "^13.0.1",
+    "@semantic-release/git": "^10.0.1",
+    "@semantic-release/github": "^11.0.5",
+    "@semantic-release/npm": "^12.0.2",
+    "@semantic-release/release-notes-generator": "^14.1.0",
+    "husky": "^9.1.7",
+    "semantic-release": "^24.2.7"
   }
 }
