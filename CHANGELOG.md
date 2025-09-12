@@ -1,3 +1,7 @@
+## 0.1.0-next.1 (2025-09-12)
+
+* feat: verstion test ([74a9226](https://github.com/mogiya/test-project/commit/74a9226))
+
 ## 1.0.0-next.1 (2025-09-12)
 
 * feat: automatical deploy test ([8bdb20b](https://github.com/mogiya/test-project/commit/8bdb20b))
