@@ -1,6 +1,6 @@
 {
   "name": "@moe.js/test-project",
-  "version": "1.0.0-next.5",
+  "version": "0.0.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/mogiya/test-project.git"
