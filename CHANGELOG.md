@@ -1,3 +1,7 @@
+## 1.0.0-next.5 (2025-09-12)
+
+* fix: commit rule update ([79d4e7a](https://github.com/mogiya/test-project/commit/79d4e7a))
+
 ## 1.0.0-next.4 (2025-09-12)
 
 * fix: test ([7b9f0c6](https://github.com/mogiya/test-project/commit/7b9f0c6))
