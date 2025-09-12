@@ -1,3 +1,7 @@
+## 1.0.0-next.3 (2025-09-12)
+
+* feat: automatical deploy test ([8bdb20b](https://github.com/mogiya/test-project/commit/8bdb20b))
+
 ## 1.0.0-next.2 (2025-09-10)
 
 * fix: change .github/workflows/release.yml ([d5b2058](https://github.com/mogiya/test-project/commit/d5b2058))
