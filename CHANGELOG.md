@@ -1,3 +1,7 @@
+## 0.1.0-next.2 (2025-09-12)
+
+* feat: verstion test(1) ([a90e94d](https://github.com/mogiya/test-project/commit/a90e94d))
+
 ## 0.1.0-next.1 (2025-09-12)
 
 * feat: verstion test ([74a9226](https://github.com/mogiya/test-project/commit/74a9226))
