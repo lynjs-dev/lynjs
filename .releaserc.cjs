@@ -8,7 +8,18 @@ module.exports = {
   ],
   plugins: [
     ["@semantic-release/commit-analyzer", { preset: "conventionalcommits" }],
-    ["@semantic-release/release-notes-generator", { preset: "conventionalcommits" }],
+    ["@semantic-release/release-notes-generator", { 
+      preset: "conventionalcommits",
+      releaseRules: [
+        { breaking: true, release: "major" },
+        { type: "feat", release: "minor" },
+        { type: "fix", release: "patch" },
+        { type: "docs", release: false },
+        { type: "docs", scope: "release", release: "patch" },
+        { type: "chore", release: false },
+        { type: "chore", scope: "release", release: "patch" },
+      ]
+    }],
 
     // === 아래 4개는 CI에서만 실행 ===
     isCI && ["@semantic-release/changelog", { changelogFile: "CHANGELOG.md" }],
