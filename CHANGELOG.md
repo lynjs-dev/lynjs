@@ -1,3 +1,7 @@
+## 1.0.0-next.4 (2025-09-12)
+
+* fix: test ([7b9f0c6](https://github.com/mogiya/test-project/commit/7b9f0c6))
+
 ## 1.0.0-next.3 (2025-09-12)
 
 * feat: automatical deploy test ([8bdb20b](https://github.com/mogiya/test-project/commit/8bdb20b))
