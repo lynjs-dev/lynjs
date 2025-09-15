@@ -1,20 +1,38 @@
 {
   "name": "lynjs",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "private": false,
   "type": "module",
-  "workspaces": [
-    "packages/*"
-  ],
+
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/[GITHUB_USER_NAME]/[REPOSITORY_NAME]"
+  },
+
   "exports": {},
+
+  "files": [
+    "README.md",
+    "LICENSE"
+  ],
+
   "sideEffects": false,
+
   "scripts": {
     "build": "echo \"(root) nothing to build yet\"",
     "clean": "git clean -fdX -e node_modules",
-    "test": "echo \"(root) no tests yet\" && exit 0"
+    "test": "echo \"(root) no tests yet\" && exit 0",
+
+    "verify:pack": "npm pack --dry-run",
+    "prepublishOnly": "npm run verify:pack"
   },
+
   "engines": {
     "node": ">=18"
+  },
+
+  "publishConfig": {
+    "access": "public"
   }
 }
 
