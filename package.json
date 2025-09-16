@@ -3,36 +3,43 @@
   "version": "0.0.1",
   "private": false,
   "type": "module",
-
   "repository": {
     "type": "git",
     "url": "https://github.com/[GITHUB_USER_NAME]/[REPOSITORY_NAME]"
   },
-
   "exports": {},
-
   "files": [
     "README.md",
     "LICENSE"
   ],
-
   "sideEffects": false,
-
   "scripts": {
     "build": "echo \"(root) nothing to build yet\"",
     "clean": "git clean -fdX -e node_modules",
     "test": "echo \"(root) no tests yet\" && exit 0",
 
     "verify:pack": "npm pack --dry-run",
-    "prepublishOnly": "npm run verify:pack"
-  },
+    "prepublishOnly": "npm run verify:pack",
+    "prepare": "husky",
 
+    "release": "semantic-release"
+  },
   "engines": {
     "node": ">=18"
   },
-
   "publishConfig": {
     "access": "public"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^19.8.1",
+    "@commitlint/config-conventional": "^19.8.1",
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/commit-analyzer": "^13.0.1",
+    "@semantic-release/git": "^10.0.1",
+    "@semantic-release/github": "^11.0.6",
+    "@semantic-release/npm": "^12.0.2",
+    "@semantic-release/release-notes-generator": "^14.1.0",
+    "husky": "^9.1.7",
+    "semantic-release": "^24.2.8"
   }
 }
-
