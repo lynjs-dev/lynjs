@@ -1,0 +1,51 @@
+name: Release (semantic-release)
+
+on:
+  push:
+    branches: [main, next] # Trigger by branch
+  workflow_dispatch: {}
+
+permissions:
+  contents: write    # Create release/tags
+  issues: write      # (Optional) Comment on release results, etc.
+  pull-requests: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # Fetch full history (all commits). Needed for commit/tag history
+          fetch-tags: true # Fetch remote tags as well. Required for previous tag history
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Install
+        run: npm ci
+
+      # (Optional) test/build
+      # - name: Test
+      #   run: npm test
+      # - name: Build
+      #   run: npm run build
+
+      - name: Configure npm auth
+        run: echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          # HUSKY: 0   # Disable HUSKY hooks in CI (avoid conflicts)
+        run: npm run release
+
