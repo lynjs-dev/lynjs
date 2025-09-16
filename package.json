@@ -1,6 +1,6 @@
 {
   "name": "lynjs",
-  "version": "0.0.1",
+  "version": "0.1.0-next.1",
   "private": false,
   "type": "module",
   "repository": {
@@ -17,11 +17,9 @@
     "build": "echo \"(root) nothing to build yet\"",
     "clean": "git clean -fdX -e node_modules",
     "test": "echo \"(root) no tests yet\" && exit 0",
-
     "verify:pack": "npm pack --dry-run",
     "prepublishOnly": "npm run verify:pack",
     "prepare": "husky",
-
     "release": "semantic-release"
   },
   "engines": {
