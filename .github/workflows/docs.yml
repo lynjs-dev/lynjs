@@ -29,39 +29,27 @@ jobs:
         run: |
           npm run docs:build
 
-          BRANCH="${GITHUB_REF_NAME}"
-          BRANCH_SAFE=$(echo "$BRANCH" | tr '/ #' '---' | sed 's/[^A-Za-z0-9._-]/-/g')
-
-          export DOCS_BASE="/${BRANCH_SAFE}"
-          npm run docs:build
-
           mkdir -p "out/${BRANCH_SAFE}"
-          cp -r docs/dist/* "out/${BRANCH_SAFE}/"
-
-          echo "BRANCH_SAFE=${BRANCH_SAFE}" >> $GITHUB_ENV
-
-      - name: Verify built URLs
-        run: |
-          grep -Eo 'https://lynjs-dev.github.io/lynjs/[^"]+' -m1 "out/${BRANCH_SAFE}/index.html" || (echo "site/base mismatch"; exit 1)o
+          cp -r docs/dist/* "out/"
 
       - name: Debug artifact tree
         run: |
           echo "== list out =="
           find out -maxdepth 3 -type f | sort
-          test -f "out/${BRANCH_SAFE}/index.html" || (echo "index.html missing"; exit 1)
+          test -f "out/index.html" || (echo "index.html missing"; exit 1)
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: out
 
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - id: deployment
+        deploy:
+          needs: build
+        runs-on: ubuntu-latest
+        environment:
+          name: github-pages
+        url: ${{ steps.deployment.outputs.page_url }}
+        steps:
+          - id: deployment
         uses: actions/deploy-pages@v4
 
