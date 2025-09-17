@@ -27,7 +27,10 @@
     "format": "prettier . --check --cache",
     "format:fix": "prettier . --write --cache",
     "lint:ws": "npm run lint -ws --if-present",
-    "format:ws": "npm run format -ws --if-present"
+    "format:ws": "npm run format -ws --if-present",
+    "docs:dev": "npm --prefix docs run dev",
+    "docs:build": "npm --prefix docs run build",
+    "docs:preview": "npm --prefix docs run preview"
   },
   "engines": {
     "node": ">=18"

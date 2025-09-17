@@ -1,0 +1,59 @@
+name: Deploy Docs
+
+on:
+  push:
+    branches: [ feature/setup-astro ]
+    paths:
+      - 'docs/**'
+      - '.github/workflows/docs.yml'
+    tags: [ 'v*' ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - run: npm ci
+      - run: npm --prefix docs ci
+
+      - name: Build docs
+        run: |
+          npm run docs:build
+          mkdir -p out
+          if [[ "${GITHUB_REF_TYPE}" == "tag" ]]; then
+            TAG="${GITHUB_REF_NAME}"
+            MAJOR=$(echo $TAG | sed -E 's/v([0-9]+).*/\1/')
+            MINOR=$(echo $TAG | sed -E 's/v([0-9]+\.[0-9]+).*/\1/')
+            cp -r docs/dist out/latest
+            cp -r docs/dist out/v${MAJOR}
+            cp -r docs/dist out/v${MINOR}
+            cp -r docs/dist out/${TAG}
+          else
+            BRANCH="${GITHUB_REF_NAME}"
+            cp -r docs/dist "out/${BRANCH}"
+          fi
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: out
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
+
