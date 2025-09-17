@@ -7,7 +7,7 @@ const base = process.env.DOCS_BASE || '/';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://lynjs-dev.github.id/lynjs',
+  site: 'https://lynjs-dev.github.id/lynjs/',
   base,
   taillingSlash: 'always',
   integrations: [
