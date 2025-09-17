@@ -20,7 +20,14 @@
     "verify:pack": "npm pack --dry-run",
     "prepublishOnly": "npm run verify:pack",
     "prepare": "husky",
-    "release": "semantic-release"
+    "release": "semantic-release",
+    "lint": "eslint --ext .ts,.tsx,.js,.cjs --report-unused-disable-directives --cache",
+    "lint:all": "eslint . --ext .ts,.tsx,.js,.cjs --report-unused-disable-directives",
+    "lint:fix": "npm run lint -- --fix --max-warnings=0",
+    "format": "prettier . --check --cache",
+    "format:fix": "prettier . --write --cache",
+    "lint:ws": "npm run lint -ws --if-present",
+    "format:ws": "npm run format -ws --if-present"
   },
   "engines": {
     "node": ">=18"
@@ -31,13 +38,28 @@
   "devDependencies": {
     "@commitlint/cli": "^19.8.1",
     "@commitlint/config-conventional": "^19.8.1",
+    "@eslint/js": "^9.35.0",
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/commit-analyzer": "^13.0.1",
     "@semantic-release/git": "^10.0.1",
     "@semantic-release/github": "^11.0.6",
     "@semantic-release/npm": "^12.0.2",
     "@semantic-release/release-notes-generator": "^14.1.0",
+    "eslint": "^9.35.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.4",
     "husky": "^9.1.7",
-    "semantic-release": "^24.2.8"
+    "lint-staged": "^15.5.2",
+    "prettier": "^3.6.2",
+    "semantic-release": "^24.2.8",
+    "typescript-eslint": "^8.44.0"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,cjs,mjs}": [
+      "npm run lint:fix"
+    ],
+    "*.{json,yml,yaml,css,scss,html,md}": [
+      "npm run format:fix"
+    ]
   }
 }
