@@ -5,6 +5,7 @@ import sitemap from '@astrojs/sitemap';
 
 // https://astro.build/config
 export default defineConfig({
+  site: 'https://lynjs-dev.github.io/lynjs',
   base: process.env.DOCS_BASE || '/',
   integrations: [
     sitemap(),
