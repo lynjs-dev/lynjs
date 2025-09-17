@@ -26,21 +26,16 @@ jobs:
       - run: npm --prefix docs ci
 
       - name: Build docs
+        env:
+          DOCS_BASE: "/${{ github.ref_name }}" # astro.config.mjs에서 base로 사용 시
         run: |
           npm run docs:build
-          mkdir -p out
-          if [[ "${GITHUB_REF_TYPE}" == "tag" ]]; then
-            TAG="${GITHUB_REF_NAME}"
-            MAJOR=$(echo $TAG | sed -E 's/v([0-9]+).*/\1/')
-            MINOR=$(echo $TAG | sed -E 's/v([0-9]+\.[0-9]+).*/\1/')
-            cp -r docs/dist out/latest
-            cp -r docs/dist out/v${MAJOR}
-            cp -r docs/dist out/v${MINOR}
-            cp -r docs/dist out/${TAG}
-          else
-            BRANCH="${GITHUB_REF_NAME}"
-            cp -r docs/dist "out/${BRANCH}"
-          fi
+
+          BRANCH="${GITHUB_REF_NAME}"
+          BRANCH_SAFE=$(echo "$BRANCH" | tr '/ #' '---' | sed 's/[^A-Za-z0-9._-]/-/g')
+
+          mkdir -p "out/${BRANCH_SAFE}"
+          cp -r docs/dist "out/${BRANCH_SAFE}"
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
