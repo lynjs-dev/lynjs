@@ -2,7 +2,7 @@ name: Deploy Docs
 
 on:
   push:
-    branches: [ feature/setup-astro ]
+    branches: [ feature/setup-astro  ]
     paths:
       - 'docs/**'
       - '.github/workflows/docs.yml'
@@ -27,17 +27,32 @@ jobs:
 
       - name: Build docs
         run: |
-          npm run docs:build
+          set -e
 
           BRANCH="${GITHUB_REF_NAME}"
           echo "Branch name : ${BRANCH}"
+
+          # 브랜치 이름 정규화 (슬래시 등 안전치환)
           BRANCH_SAFE=$(echo "$BRANCH" | tr '/ #' '---' | sed 's/[^A-Za-z0-9._-]/-/g')
 
-          export DOCS_BASE="/lynjs/${BRANCH_SAFE}"
+          if [ "$BRANCH" = "feature/setup-astro" ]; then
+            # main 브랜치는 /lynjs 루트에 배포
+            export DOCS_BASE="/lynjs"
+            OUT_DIR="out"
+          else
+            # 그 외 브랜치는 /lynjs/<branch>
+            export DOCS_BASE="/lynjs/${BRANCH_SAFE}"
+            OUT_DIR="out/${BRANCH_SAFE}"
+          fi
+
+          echo "DOCS_BASE=${DOCS_BASE}"
+          echo "OUT_DIR=${OUT_DIR}"
+
+          # 빌드 (astro.config.mjs 에서 process.env.DOCS_BASE 사용)
           npm run docs:build
 
-          mkdir -p "out/${BRANCH_SAFE}"
-          cp -r docs/dist/* "out/${BRANCH_SAFE}/"
+          mkdir -p "$OUT_DIR"
+          cp -r docs/dist/* "$OUT_DIR/"
 
           echo "BRANCH_SAFE=${BRANCH_SAFE}" >> $GITHUB_ENV
 
@@ -61,4 +76,3 @@ jobs:
     steps:
       - id: deployment
         uses: actions/deploy-pages@v4
-
