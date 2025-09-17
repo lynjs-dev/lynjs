@@ -1,3 +1,18 @@
+## 1.0.0-next.1 (2025-09-17)
+
+* Merge branch 'feature/lint-and-prettier-setup' into next ([9f59596](https://github.com/lynjs-dev/lynjs/commit/9f59596))
+* Merge pull request #2 from lynjs-dev/featrue/ci-npm-setup ([576b074](https://github.com/lynjs-dev/lynjs/commit/576b074)), closes [#2](https://github.com/lynjs-dev/lynjs/issues/2)
+* feat: set up lint and prettier ([5261085](https://github.com/lynjs-dev/lynjs/commit/5261085))
+* feat: trigger CI/CD ([efaa452](https://github.com/lynjs-dev/lynjs/commit/efaa452))
+* feat: trigger CI/CD ([be35cd9](https://github.com/lynjs-dev/lynjs/commit/be35cd9))
+* chore: initialize LynJS monorepo structure ([6175e09](https://github.com/lynjs-dev/lynjs/commit/6175e09))
+* chore(ci): add package-lock.json ([205e2d6](https://github.com/lynjs-dev/lynjs/commit/205e2d6))
+* chore(ci): add package-lock.json ([716aac7](https://github.com/lynjs-dev/lynjs/commit/716aac7))
+* chore(ci): setup semantic-release and GitHub Actions workflow ([125743e](https://github.com/lynjs-dev/lynjs/commit/125743e))
+* chore(npm): prepare initial publish skeleton ([3c9bb7a](https://github.com/lynjs-dev/lynjs/commit/3c9bb7a))
+* chore(release): 0.1.0-next.1 [skip ci] ([5bee2b3](https://github.com/lynjs-dev/lynjs/commit/5bee2b3))
+* chore(release): 0.1.0-next.1 [skip ci] ([88c3ed2](https://github.com/lynjs-dev/lynjs/commit/88c3ed2))
+
 ## 0.1.0-next.1 (2025-09-16)
 
 * feat: trigger CI/CD ([9096745](https://github.com/lynjs-dev/lynjs/commit/9096745))
