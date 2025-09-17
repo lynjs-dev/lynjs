@@ -26,8 +26,6 @@ jobs:
       - run: npm --prefix docs ci
 
       - name: Build docs
-        env:
-          DOCS_BASE: "/${{ github.ref_name }}" # astro.config.mjs에서 base로 사용 시
         run: |
           npm run docs:build
 
