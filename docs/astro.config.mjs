@@ -1,10 +1,13 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
+import sitemap from '@astrojs/sitemap';
 
 // https://astro.build/config
 export default defineConfig({
+  site: 'https://lynjs-dev.github.id/lynjs',
   integrations: [
+    sitemap(),
     starlight({
       title: 'LynJS Documentation',
       social: [{ icon: 'github', label: 'GitHub', href: 'https://github.com/lynjs-dev/lynjs' }],
