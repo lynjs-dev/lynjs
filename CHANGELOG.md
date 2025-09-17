@@ -1,3 +1,8 @@
+## <small>0.1.2-next.1 (2025-09-17)</small>
+
+* fix: redefine version ([21347da](https://github.com/lynjs-dev/lynjs/commit/21347da))
+* chore(release): 1.0.0-next.1 [skip ci] ([8550937](https://github.com/lynjs-dev/lynjs/commit/8550937))
+
 ## 0.1.0-next.1 (2025-09-16)
 
 * feat: trigger CI/CD ([9096745](https://github.com/lynjs-dev/lynjs/commit/9096745))
