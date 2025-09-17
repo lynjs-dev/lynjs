@@ -58,7 +58,7 @@ export default [
 
   // 7) Node 환경이 필요한 설정 파일들만 별도 적용
   {
-    files: ['*.config.cjs', '*.config.mjs', '.releaserc.cjs', 'commitlint.config.cjs'],
+    files: ['*.config.cjs', '*.config.mjs', '*.config.ts', '.releaserc.cjs', 'commitlint.config.cjs'],
     languageOptions: {
       globals: {
         module: 'readonly',

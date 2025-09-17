@@ -1,0 +1,83 @@
+name: Deploy Docs
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'docs/**'
+      - '.github/workflows/docs.yml'
+    tags: [ 'v*' ]
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - run: npm ci
+      - run: npm --prefix docs ci
+
+      - name: Build docs
+        run: |
+          set -e
+
+          BRANCH="${GITHUB_REF_NAME}"
+          echo "Branch name : ${BRANCH}"
+
+          # 브랜치 이름 정규화 (슬래시 등 안전치환)
+          BRANCH_SAFE=$(echo "$BRANCH" | tr '/ #' '---' | sed 's/[^A-Za-z0-9._-]/-/g')
+
+          if [ "$BRANCH" = "main" ]; then
+            export DOCS_BASE="/"
+            OUT_DIR="out"
+          else
+            # 그 외 브랜치는 /<branch>
+            export DOCS_BASE="/${BRANCH_SAFE}"
+            OUT_DIR="out/${BRANCH_SAFE}"
+          fi
+
+          echo "DOCS_BASE=${DOCS_BASE}"
+          echo "OUT_DIR=${OUT_DIR}"
+
+          # 빌드 (astro.config.mjs 에서 process.env.DOCS_BASE 사용)
+          npm run docs:build
+
+          mkdir -p "$OUT_DIR"
+          cp -r docs/dist/* "$OUT_DIR/"
+
+          echo "BRANCH=${BRANCH}" >> $GITHUB_ENV
+          echo "BRANCH_SAFE=${BRANCH_SAFE}" >> $GITHUB_ENV
+
+      - name: Debug artifact tree
+        run: |
+          echo "== list out =="
+          find out -maxdepth 3 -type f | sort
+
+          if [ "$BRANCH" = "main" ]; then
+            test -f "out/index.html" || (echo "index.html missing"; exit 1)
+          else
+            test -f "out/${BRANCH_SAFE}/index.html" || (echo "index.html missing"; exit 1)
+          fi
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: out
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
