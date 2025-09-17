@@ -40,6 +40,10 @@ jobs:
 
           echo "BRANCH_SAFE=${BRANCH_SAFE}" >> $GITHUB_ENV
 
+      - name: Verify built URLs
+        run: |
+          grep -Eo 'https://lynjs-dev.github.io/lynjs/[^"]+' -m1 "out/${BRANCH_SAFE}/index.html" || (echo "site/base mismatch"; exit 1)o
+
       - name: Debug artifact tree
         run: |
           echo "== list out =="
