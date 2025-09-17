@@ -62,7 +62,7 @@ jobs:
           echo "== list out =="
           find out -maxdepth 3 -type f | sort
 
-          if [ "$BRANCH" = "main" ]; then
+          if [ "$BRANCH" = "feature/setup-astro" ]; then
             test -f "out/index.html" || (echo "index.html missing"; exit 1)
           else
             test -f "out/${BRANCH_SAFE}/index.html" || (echo "index.html missing"; exit 1)
