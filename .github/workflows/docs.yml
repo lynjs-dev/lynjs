@@ -40,16 +40,16 @@ jobs:
           mkdir -p "out/${BRANCH_SAFE}"
           cp -r docs/dist/* "out/${BRANCH_SAFE}/"
 
-    - name: Debug artifact tree
-      run: |
-        echo "== list out =="
-        find out -maxdepth 3 -type f | sort
-        test -f "out/${BRANCH_SAFE}/index.html" || (echo "index.html missing"; exit 1)
+      - name: Debug artifact tree
+        run: |
+          echo "== list out =="
+          find out -maxdepth 3 -type f | sort
+          test -f "out/${BRANCH_SAFE}/index.html" || (echo "index.html missing"; exit 1)
 
-    - name: Upload artifact
-      uses: actions/upload-pages-artifact@v3
-      with:
-        path: out
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: out
 
   deploy:
     needs: build
