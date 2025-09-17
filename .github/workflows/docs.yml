@@ -38,7 +38,7 @@ jobs:
           npm run docs:build
 
           mkdir -p "out/${BRANCH_SAFE}"
-          cp -r docs/dist/* "out/${BRANCH_SAFE}/
+          cp -r docs/dist/* "out/${BRANCH_SAFE}/"
 
 
       - name: Upload artifact
