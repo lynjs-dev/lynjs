@@ -6,6 +6,6 @@ This package is an **initial skeleton** intended to serve as the root of the mon
 - TypeScript: Type Configurator in progress
 
 The following will be added in future versions:
+
 - Public API (`import { LynElement } from 'lynjs'`)
 - Declaration file (types) and documentation
-

@@ -6,8 +6,8 @@ on:
   workflow_dispatch: {}
 
 permissions:
-  contents: write    # Create release/tags
-  issues: write      # (Optional) Comment on release results, etc.
+  contents: write # Create release/tags
+  issues: write # (Optional) Comment on release results, etc.
   pull-requests: write
 
 jobs:
@@ -18,7 +18,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0   # Fetch full history (all commits). Needed for commit/tag history
+          fetch-depth: 0 # Fetch full history (all commits). Needed for commit/tag history
           fetch-tags: true # Fetch remote tags as well. Required for previous tag history
 
       - name: Setup Node
@@ -26,10 +26,16 @@ jobs:
         with:
           node-version: 22
           cache: npm
-          registry-url: "https://registry.npmjs.org"
+          registry-url: 'https://registry.npmjs.org'
 
       - name: Install
         run: npm ci
+
+      - name: Lint all
+        run: npm run lint:all
+
+      - name: Format check
+        run: npm run format
 
       # (Optional) test/build
       # - name: Test
@@ -48,4 +54,3 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
           # HUSKY: 0   # Disable HUSKY hooks in CI (avoid conflicts)
         run: npm run release
-
