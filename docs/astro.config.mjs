@@ -3,9 +3,13 @@ import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
 import sitemap from '@astrojs/sitemap';
 
+const base = process.env.DOCS_BASE || '/';
+
 // https://astro.build/config
 export default defineConfig({
   site: 'https://lynjs-dev.github.id/lynjs',
+  base,
+  taillingSlash: 'always',
   integrations: [
     sitemap(),
     starlight({

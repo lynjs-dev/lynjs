@@ -34,8 +34,12 @@ jobs:
           BRANCH="${GITHUB_REF_NAME}"
           BRANCH_SAFE=$(echo "$BRANCH" | tr '/ #' '---' | sed 's/[^A-Za-z0-9._-]/-/g')
 
+          export DOCS_BASE="/${BRANCH_SAFE}"
+          npm run docs:build
+
           mkdir -p "out/${BRANCH_SAFE}"
-          cp -r docs/dist "out/${BRANCH_SAFE}"
+          cp -r docs/dist/* "out/${BRANCH_SAFE}/
+
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
