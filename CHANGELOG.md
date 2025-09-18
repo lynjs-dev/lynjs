@@ -1,3 +1,8 @@
+## 0.2.0-next.2 (2025-09-18)
+
+* fix: fixed 'docs/src/content.config.ts' ([e353a63](https://github.com/lynjs-dev/lynjs/commit/e353a63))
+* chore: allowed ts comment ([8cf1acc](https://github.com/lynjs-dev/lynjs/commit/8cf1acc))
+
 ## 0.2.0-next.1 (2025-09-18)
 
 * fix: add 'docs/.astro/**' to lint and prettier ignore ([6fb0d49](https://github.com/lynjs-dev/lynjs/commit/6fb0d49))
