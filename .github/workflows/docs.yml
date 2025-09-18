@@ -21,7 +21,8 @@ jobs:
       - uses: actions/checkout@v4
         with: { fetch-depth: 0 }
       - uses: actions/setup-node@v4
-        with: { node-version: 20 }
+        with:
+          node-version: 20
       - run: npm ci
       - run: npm --prefix docs ci
 
@@ -32,14 +33,14 @@ jobs:
           BRANCH="${GITHUB_REF_NAME}"
           echo "Branch name : ${BRANCH}"
 
-          # 브랜치 이름 정규화 (슬래시 등 안전치환)
+          # Normalize branch name (replace unsafe characters like slashes)
           BRANCH_SAFE=$(echo "$BRANCH" | tr '/ #' '---' | sed 's/[^A-Za-z0-9._-]/-/g')
 
           if [ "$BRANCH" = "main" ]; then
             export DOCS_BASE="/"
             OUT_DIR="out"
           else
-            # 그 외 브랜치는 /<branch>
+            # For non-main branches, deploy to /<branch>
             export DOCS_BASE="/${BRANCH_SAFE}"
             OUT_DIR="out/${BRANCH_SAFE}"
           fi
@@ -47,7 +48,7 @@ jobs:
           echo "DOCS_BASE=${DOCS_BASE}"
           echo "OUT_DIR=${OUT_DIR}"
 
-          # 빌드 (astro.config.mjs 에서 process.env.DOCS_BASE 사용)
+          # Build (astro.config.mjs should use process.env.DOCS_BASE)
           npm run docs:build
 
           mkdir -p "$OUT_DIR"
