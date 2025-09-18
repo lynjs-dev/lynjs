@@ -1,4 +1,3 @@
-// eslint.config.js
 import { cwd } from 'node:process';
 import js from '@eslint/js';
 import ts from 'typescript-eslint';
@@ -6,26 +5,12 @@ import prettier from 'eslint-config-prettier';
 import eslintPluginPrettier from 'eslint-plugin-prettier';
 
 export default [
-  // 1) JS 권장
   js.configs.recommended,
-
-  // 2) TS 권장(타입기반 규칙은 꺼둔 기본 recommended)
   ...ts.configs.recommended,
-
-  // 3) Prettier와 충돌하는 규칙 끄기
   prettier,
 
-  // 4) 전역 ignore & 공통 룰
   {
-    ignores: [
-      '**/node_modules/**',
-      '**/dist/**',
-      '**/coverage/**',
-      '**/*.d.ts',
-      'docs/.astro/**',
-      // 필요 시 설정 파일 전역 무시도 가능:
-      // '**/*.config.js', '**/*.config.cjs', '**/*.config.mjs',
-    ],
+    ignores: ['**/node_modules/**', '**/dist/**', '**/coverage/**', '**/*.d.ts', 'docs/.astro/**'],
   },
   {
     plugins: { prettier: eslintPluginPrettier },
@@ -33,31 +18,32 @@ export default [
       'prettier/prettier': 'error',
       '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }],
       '@typescript-eslint/no-explicit-any': 'warn',
+      '@typescript-eslint/ban-ts-comment': 'off', // allow @ts-ignore
     },
   },
 
-  // 5) 타입 인지 없이 빠른 TS 린트
+  // Fast TS linting without type information
   {
     files: ['{src,packages/*}/**/*.{ts,tsx}'],
     languageOptions: {
       parser: ts.parser,
       parserOptions: {
         project: [
-          './tsconfig.json', // 루트
-          './packages/*/tsconfig.json', // 모든 패키지
+          './tsconfig.json', // root tsconfig
+          './packages/*/tsconfig.json', // tsconfig for each package
         ],
         tsconfigRootDir: cwd(),
       },
     },
   },
 
-  // 6) 테스트 파일 ESLint 적용 완화
+  // Relax linting rules for test files
   {
     files: ['**/*.test.ts', '**/*.test.tsx'],
     rules: { '@typescript-eslint/no-explicit-any': 'off' },
   },
 
-  // 7) Node 환경이 필요한 설정 파일들만 별도 적용
+  // Apply Node-specific globals only for config files
   {
     files: ['*.config.cjs', '*.config.mjs', '*.config.ts', '.releaserc.cjs', 'commitlint.config.cjs'],
     languageOptions: {
