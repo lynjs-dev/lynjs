@@ -1,3 +1,10 @@
+## 0.2.0-next.1 (2025-09-18)
+
+* fix: add 'docs/.astro/**' to lint and prettier ignore ([6fb0d49](https://github.com/lynjs-dev/lynjs/commit/6fb0d49))
+* fix: comments in '.github/workflows/docs.yml' have been modified ([bdcee20](https://github.com/lynjs-dev/lynjs/commit/bdcee20))
+* fix: fixed astro.config.mjs ([b0daa6e](https://github.com/lynjs-dev/lynjs/commit/b0daa6e))
+* feat: set up astro and starlight ([884088a](https://github.com/lynjs-dev/lynjs/commit/884088a))
+
 ## <small>0.1.2-next.1 (2025-09-17)</small>
 
 * fix: redefine version ([21347da](https://github.com/lynjs-dev/lynjs/commit/21347da))
