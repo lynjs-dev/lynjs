@@ -22,6 +22,7 @@ export default [
       '**/dist/**',
       '**/coverage/**',
       '**/*.d.ts',
+      'docs/.astro/**',
       // 필요 시 설정 파일 전역 무시도 가능:
       // '**/*.config.js', '**/*.config.cjs', '**/*.config.mjs',
     ],
