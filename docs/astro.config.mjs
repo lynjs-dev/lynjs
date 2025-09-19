@@ -11,19 +11,33 @@ export default defineConfig({
   integrations: [
     sitemap(),
     starlight({
-      title: 'LynJS Documentation',
+      title: 'LynJS',
       social: [{ icon: 'github', label: 'GitHub', href: 'https://github.com/lynjs-dev/lynjs' }],
+      customCss: ['./src/styles/global.css'],
+      defaultLocale: 'en',
+      locales: {
+        en: {
+          label: 'English',
+          lang: 'en',
+        },
+
+        ko: {
+          label: '한국어',
+          lang: 'ko',
+        },
+      },
       sidebar: [
         {
-          label: 'Guides',
+          label: 'API REFERENCE',
           items: [
-            // Each item here is one entry in the navigation menu.
-            { label: 'Example Guide', slug: 'guides/example' },
+            {
+              label: 'INTRODUCTION',
+              items: [
+                { label: 'What is LynJS?', slug: 'introduction/what-is-lynjs' },
+                // { label: 'Getting Started', slug: 'api' },
+              ],
+            },
           ],
-        },
-        {
-          label: 'Reference',
-          autogenerate: { directory: 'reference' },
         },
       ],
     }),
