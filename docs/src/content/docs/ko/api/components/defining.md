@@ -1,0 +1,30 @@
+---
+title: 커스텀 엘리먼트 정의하기
+---
+
+LynJS에서 커스텀 엘리먼트는 `LynElement`를 상속받아 정의합니다.
+
+이렇게 정의된 클래스는 브라우저의 **Custom Elements Registry**에 등록되어, 표준 웹 컴포넌트로 동작합니다.
+
+이 방식은 컴포넌트를 표준에 맞게 유지하면서, 어떤 프로젝트에서도 쉽게 재사용할 수 있도록 합니다.
+
+---
+
+## 문법 예시
+
+```ts
+import { LynElement, element } from '@lynjs/core';
+
+export class MyElement extends LynElement {
+  render() {
+    const el = document.createElement('p');
+    el.innerText = 'Hello from MyElement!';
+    return el;
+  }
+}
+
+customElements.define('my-element', MyElement);
+```
+
+- `LynElement`는 생명주기, 렌더링, 세밀한 반응성 기능을 제공하는 기본 클래스입니다.
+- `customElements.define`는 해당 클래스를 브라우저에 커스텀 엘리먼트로 등록합니다.

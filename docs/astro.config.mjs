@@ -37,6 +37,10 @@ export default defineConfig({
                 // { label: 'Getting Started', slug: 'api' },
               ],
             },
+            {
+              label: 'COMPONENTS',
+              items: [{ label: 'Defining', slug: 'api/components/defining' }],
+            },
           ],
         },
       ],
