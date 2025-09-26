@@ -36,7 +36,7 @@ export class LynElement extends HTMLElement {
    * Subclasses override to return a Node.
    * Default returns an empty text node (kept as near no-op).
    */
-  protected render(): Node {
+  protected render(): Node | null {
     return document.createTextNode('');
   }
 }

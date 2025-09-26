@@ -3,10 +3,20 @@
   "version": "0.0.1",
   "private": true,
   "type": "module",
-
   "exports": {
     ".": {
       "import": "./src/index.ts"
     }
+  },
+  "scripts": {
+    "test": "vitest",
+    "test:watch": "vitest --watch",
+    "test:browser": "vitest --browser"
+  },
+  "devDependencies": {
+    "@testing-library/dom": "^10.4.1",
+    "@vitest/browser": "^3.2.4",
+    "playwright": "^1.55.1",
+    "vitest": "^3.2.4"
   }
 }
