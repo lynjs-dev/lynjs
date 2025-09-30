@@ -1,8 +1,8 @@
-// @ts-check
 import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
 import sitemap from '@astrojs/sitemap';
 import process from 'node:process';
+import { fileURLToPath, URL } from 'node:url';
 
 // https://astro.build/config
 export default defineConfig({
@@ -11,21 +11,46 @@ export default defineConfig({
   integrations: [
     sitemap(),
     starlight({
-      title: 'LynJS Documentation',
+      title: 'LynJS',
       social: [{ icon: 'github', label: 'GitHub', href: 'https://github.com/lynjs-dev/lynjs' }],
+      customCss: ['./src/styles/global.css'],
+      defaultLocale: 'en',
+      locales: {
+        en: {
+          label: 'English',
+          lang: 'en',
+        },
+
+        ko: {
+          label: '한국어',
+          lang: 'ko',
+        },
+      },
       sidebar: [
         {
-          label: 'Guides',
+          label: 'API REFERENCE',
           items: [
-            // Each item here is one entry in the navigation menu.
-            { label: 'Example Guide', slug: 'guides/example' },
+            {
+              label: 'INTRODUCTION',
+              items: [
+                { label: 'What is LynJS?', slug: 'introduction/what-is-lynjs' },
+                // { label: 'Getting Started', slug: 'api' },
+              ],
+            },
+            {
+              label: 'COMPONENTS',
+              items: [{ label: 'Defining', slug: 'api/components/define' }],
+            },
           ],
-        },
-        {
-          label: 'Reference',
-          autogenerate: { directory: 'reference' },
         },
       ],
     }),
   ],
+  vite: {
+    resolve: {
+      alias: {
+        '~': fileURLToPath(new URL('./src', import.meta.url)), // "~/..." → src/*
+      },
+    },
+  },
 });

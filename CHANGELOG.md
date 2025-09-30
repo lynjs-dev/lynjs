@@ -1,12 +1,14 @@
-## 0.2.0 (2025-09-18)
+## 0.2.0-next.2 (2025-09-18)
+
+* fix: fixed 'docs/src/content.config.ts' ([e353a63](https://github.com/lynjs-dev/lynjs/commit/e353a63))
+* chore: allowed ts comment ([8cf1acc](https://github.com/lynjs-dev/lynjs/commit/8cf1acc))
+
+## 0.2.0-next.1 (2025-09-18)
 
 * fix: add 'docs/.astro/**' to lint and prettier ignore ([6fb0d49](https://github.com/lynjs-dev/lynjs/commit/6fb0d49))
 * fix: comments in '.github/workflows/docs.yml' have been modified ([bdcee20](https://github.com/lynjs-dev/lynjs/commit/bdcee20))
 * fix: fixed astro.config.mjs ([b0daa6e](https://github.com/lynjs-dev/lynjs/commit/b0daa6e))
-* fix: redefine version ([21347da](https://github.com/lynjs-dev/lynjs/commit/21347da))
 * feat: set up astro and starlight ([884088a](https://github.com/lynjs-dev/lynjs/commit/884088a))
-* chore(release): 0.1.2-next.1 [skip ci] ([9422051](https://github.com/lynjs-dev/lynjs/commit/9422051))
-* chore(release): 1.0.0-next.1 [skip ci] ([8550937](https://github.com/lynjs-dev/lynjs/commit/8550937))
 
 ## <small>0.1.2-next.1 (2025-09-17)</small>
 

@@ -1,0 +1,20 @@
+---
+title: Define custom element
+---
+
+import CodeBlock from '~/components/CodeBlock.astro';
+
+In LynJS, custom elements are defined by extending `LynElement`.
+
+Once defined, the class is registered with the browser's **Custom Elements Registry** and works as a standard Web
+Component.
+
+This approach keeps components standard-compliant and makes them easily reusable across different projects.
+
+<CodeBlock
+  sources={['/src/examples/api/components/define/define.ts']}
+  preview="/src/examples/api/components/define/define.html"
+/>
+
+- `LynElement` is the base class that provides lifecycle, rendering, and fine-grained reactivity features.
+- `customElements.define` registers the class as a custom element in the browser.

@@ -8,3 +8,11 @@ end_of_line = lf
 insert_final_newline = true
 trim_trailing_whitespace = true
 
+[*.md]
+max_line_length = 120
+
+[docs/src/content/docs/ko/**/*.md]
+max_line_length = 80
+
+[docs/src/content/_drafts/**/*.ko.md]
+max_line_length = 80
