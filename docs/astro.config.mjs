@@ -1,8 +1,8 @@
-// @ts-check
 import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
 import sitemap from '@astrojs/sitemap';
 import process from 'node:process';
+import { fileURLToPath, URL } from 'node:url';
 
 // https://astro.build/config
 export default defineConfig({
@@ -39,11 +39,18 @@ export default defineConfig({
             },
             {
               label: 'COMPONENTS',
-              items: [{ label: 'Defining', slug: 'api/components/defining' }],
+              items: [{ label: 'Defining', slug: 'api/components/define' }],
             },
           ],
         },
       ],
     }),
   ],
+  vite: {
+    resolve: {
+      alias: {
+        '~': fileURLToPath(new URL('./src', import.meta.url)), // "~/..." → src/*
+      },
+    },
+  },
 });

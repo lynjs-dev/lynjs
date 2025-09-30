@@ -1,0 +1,105 @@
+---
+import { Code, Tabs, TabItem } from '@astrojs/starlight/components';
+import path from 'node:path';
+
+export interface Props {
+  sources: string[];
+  preview?: string;     // 실제로 렌더할 HTML 파일
+  runtime?: string;     // 브라우저에서 import할 TS 모듈 경로(선택)
+}
+
+const { sources, preview, runtime } = Astro.props;
+
+// 원본 코드 문자열을 동기 로드
+const files = import.meta.glob('/src/**/*', { as: 'raw', eager: true }) as Record<string, string>;
+
+function getCode(file: string): string {
+  return file in files ? files[file] : `file not found: ${file}`;
+}
+
+function getFileName(file: string): string {
+  // 크로스 플랫폼 안전
+  return path.basename(file);
+}
+
+function getExtension(file: string): string {
+  return file.split('.').at(-1) as string;
+}
+
+// runtime 모듈 경로 결정: props.runtime 우선, 없으면 sources에서 .ts/.tsx 첫 항목 사용
+const runtimeModule =
+  runtime ??
+  sources.find((s) => /\.(ts|tsx)$/.test(s)) ??
+  '';
+---
+
+<style>
+  /* 프리뷰 박스 전체 */
+  .lyn-preview {
+    margin-top: 0;
+    border-bottom: 1px solid var(--sl-color-hairline);
+    border-left: 1px solid var(--sl-color-hairline);
+    border-right: 1px solid var(--sl-color-hairline);
+    border-radius: 0 0 12px 12px;
+
+    /* 핵심: 이 영역은 항상 라이트 모드로 렌더 */
+    color-scheme: light;
+
+    /* Starlight 변수 일부를 라이트 톤으로 재정의 */
+    --preview-bg: #eee;
+    --preview-text: #111111;
+    --preview-border: var(--sl-color-gray-5);
+    --preview-muted: #6b7280;  /* gray-500 근사 */
+
+    background: var(--preview-bg);
+    border-color: var(--preview-border);
+  }
+
+  /* 실제 프리뷰 캔버스: 라이트 고정 */
+  .lyn-preview__canvas {
+    padding: .75rem;
+    background: var(--preview-bg);
+    color: var(--preview-text);
+    border-radius: 0 0 12px 12px;
+  }
+
+  /* 프리뷰 내부 텍스트 가독성 보정 (다크모드에서도 항상 라이트 컬러) */
+  .lyn-preview__canvas :where(p, h1, h2, h3, h4, h5, h6, li, span, small, strong, em, code, pre, blockquote, a) {
+    color: var(--preview-text);
+  }
+  .lyn-preview__canvas a { text-decoration: underline; }
+
+  /* 코드/보더 등 추가 톤 */
+  .lyn-preview__canvas :where(hr, table, th, td, pre, code) {
+    border-color: var(--preview-border);
+  }
+</style>
+
+<div class="lyn-codeblock">
+  <Tabs>
+    {sources.map((source) => (
+      <TabItem label={getFileName(source)}>
+        <Code code={getCode(source)} lang={getExtension(source)} />
+      </TabItem>
+    ))}
+  </Tabs>
+
+  {preview && (
+    <section class="lyn-preview" aria-labelledby="lyn-preview-title" role="region">
+      <div class="lyn-preview__canvas" set:html={getCode(preview)} />
+    </section>
+  )}
+</div>
+
+{/*
+  브라우저에서만 TS 모듈을 동적 import → 커스텀 엘리먼트 등록 보장
+  서버에서 직렬화한 경로(runtimeModule)를 클라이언트로 안전하게 전달
+*/}
+{runtimeModule && (
+<script type="module" define:vars={{ runtimeModule }}>
+  if (runtimeModule) {
+    // Vite 정적 분석을 피하기 위해 vite-ignore 사용
+    await import(/* @vite-ignore */ runtimeModule);
+  }
+</script>
+  )}
