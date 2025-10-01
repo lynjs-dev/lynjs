@@ -24,7 +24,7 @@ export default [
 
   // Fast TS linting without type information
   {
-    files: ['{src,packages/*}/**/*.{ts,tsx}'],
+    files: ['{src,packages/src}/**/*.{ts,tsx}'],
     languageOptions: {
       parser: ts.parser,
       parserOptions: {
