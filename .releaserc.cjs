@@ -21,14 +21,23 @@ module.exports = {
     ],
     ['@semantic-release/release-notes-generator', { preset: 'conventionalcommits' }],
 
+    [
+      '@semantic-release/exec',
+      {
+        // Inject nextRelease.version into preset package.json
+        prepareCmd: 'node scripts/sync-preset-version.js ${nextRelease.version}',
+      },
+    ],
+
     // === The following 4 plugins only run in CI ===
     isCI && ['@semantic-release/changelog', { changelogFile: 'CHANGELOG.md' }],
     isCI && ['@semantic-release/npm', { tarballDir: 'dist-tarball' }],
+    isCI && ['@semantic-release/npm', { pkgRoot: 'packages/babel-preset-lynjs', tarballDir: 'dist-tarball' }],
     isCI && ['@semantic-release/github', { assets: 'dist-tarball/*.tgz' }],
     isCI && [
       '@semantic-release/git',
       {
-        assets: ['CHANGELOG.md', 'package.json'],
+        assets: ['CHANGELOG.md', 'package.json', 'packages/babel-preset-lynjs/package.json'],
         message: 'chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}',
       },
     ],

@@ -60,4 +60,5 @@ tmp/
 
 # Only ignore npm pack tarballs
 lynjs-*.tgz
+babel-preset-lynjs-*.tgz
 

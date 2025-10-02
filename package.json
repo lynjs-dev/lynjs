@@ -5,7 +5,7 @@
   "type": "module",
   "repository": {
     "type": "git",
-    "url": "https://github.com/[GITHUB_USER_NAME]/[REPOSITORY_NAME]"
+    "url": "git+https://github.com/[GITHUB_USER_NAME]/[REPOSITORY_NAME].git"
   },
   "exports": {
     ".": {
@@ -27,6 +27,9 @@
     "test:core:browser": "npm --prefix packages/core run test:browser",
     "verify:pack": "npm pack --dry-run",
     "prepublishOnly": "npm run verify:pack",
+    "pack:preset": "npm pack -w packages/babel-preset-lynjs",
+    "publish:preset": "npm publish -w packages/babel-preset-lynjs --access public",
+    "version:preset": "npm version patch -w packages/babel-preset-lynjs",
     "prepare": "husky",
     "release": "semantic-release",
     "lint": "eslint --ext .ts,.tsx,.js,.cjs --report-unused-disable-directives --cache",
@@ -70,6 +73,7 @@
     "lint-staged": "^15.5.2",
     "prettier": "^3.6.2",
     "semantic-release": "^24.2.8",
+    "typescript": "^5.9.3",
     "typescript-eslint": "^8.44.0",
     "vitest": "^3.2.4"
   },

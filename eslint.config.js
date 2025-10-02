@@ -1,6 +1,7 @@
 import { cwd } from 'node:process';
 import js from '@eslint/js';
 import ts from 'typescript-eslint';
+import * as globals from 'globals';
 import prettier from 'eslint-config-prettier';
 import eslintPluginPrettier from 'eslint-plugin-prettier';
 
@@ -22,6 +23,26 @@ export default [
     },
   },
 
+  {
+    files: ['**/*.{js,cjs,mjs}'],
+    languageOptions: {
+      globals: {
+        ...globals.browser,
+        ...globals.node,
+      },
+    },
+    rules: {
+      'no-undef': 'off',
+    },
+  },
+
+  {
+    files: ['packages/babel-preset-lynjs/**/*.js'],
+    rules: {
+      '@typescript-eslint/no-require-imports': 'off',
+    },
+  },
+
   // Fast TS linting without type information
   {
     files: ['{src,packages/src}/**/*.{ts,tsx}'],
@@ -39,7 +60,7 @@ export default [
 
   // Relax linting rules for test files
   {
-    files: ['**/*.test.ts', '**/*.test.tsx'],
+    files: ['**/*.test.ts', '**/*.jsx.test.js'],
     rules: { '@typescript-eslint/no-explicit-any': 'off' },
   },
 
