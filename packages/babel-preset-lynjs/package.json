@@ -1,0 +1,35 @@
+{
+  "name": "babel-preset-lynjs",
+  "version": "0.1.0",
+  "description": "Babel preset to transform JSX for Lyn.JS",
+  "main": "index.cjs",
+  "author": "MoGi <mogiblahblah@gmail.com>",
+  "license": "BSD-3-Clause",
+  "keywords": [
+    "babel-preset",
+    "lynjs",
+    "jsx",
+    "typescript",
+    "babel"
+  ],
+  "files": [
+    "index.cjs"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "babel-plugin-jsx-dom-expressions": "^0.40.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.28.4",
+    "@babel/preset-env": "^7.28.3",
+    "@babel/preset-typescript": "^7.27.1"
+  },
+  "peerDependencies": {
+    "@babel/core": "^7.28.4",
+    "@babel/preset-env": "^7.28.3",
+    "@babel/preset-typescript": "^7.27.1",
+    "lynjs": "^0.1.0-next.1"
+  }
+}
