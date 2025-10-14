@@ -14,8 +14,9 @@ presetJson.version = nextVersion;
 
 // Synchronize lynjs dependencies/peer dependencies as well (only when present)
 if (presetJson.dependencies?.lynjs) {
-  presetJson.dependencies.lynjs = nextVersion;
+  presetJson.dependencies.lynjs = `^${nextVersion}`;
 }
+
 if (presetJson.peerDependencies?.lynjs) {
   presetJson.peerDependencies.lynjs = `^${nextVersion}`;
 }
