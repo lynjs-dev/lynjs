@@ -1,3 +1,11 @@
+## 0.2.0-next.4 (2025-10-14)
+
+* fix: fix `.releaserc.cjs` - Changed the way preset is published ([8aaf370](https://github.com/lynjs-dev/lynjs/commit/8aaf370))
+* fix: fix `.releaserc.cjs` - Changed the way preset is published ([811a119](https://github.com/lynjs-dev/lynjs/commit/811a119))
+* fix: fix `.releaserc.cjs` - update commit files ([7a8b3fe](https://github.com/lynjs-dev/lynjs/commit/7a8b3fe))
+* fix: fix `.releaserc.cjs` - update commit files ([64e9d8e](https://github.com/lynjs-dev/lynjs/commit/64e9d8e))
+* Merge branch 'feature/jsx_runtime' into next ([1b3c496](https://github.com/lynjs-dev/lynjs/commit/1b3c496))
+
 ## 0.2.0-next.3 (2025-10-14)
 
 * fix: add @semantic-release/exec into package.json ([dd2ffd9](https://github.com/lynjs-dev/lynjs/commit/dd2ffd9))
