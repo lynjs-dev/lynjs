@@ -33,7 +33,7 @@ module.exports = {
         // publish preset (directly with exec)
         // - --tag next if next branch, --tag latest if main
         publishCmd:
-          'TAG=${nextRelease.channel:-latest}; ' +
+          'TAG=${nextRelease.channel || "latest"}; ' +
           'if [ "$TAG" = "undefined" ] || [ -z "$TAG" ]; then TAG=latest; fi; ' +
           'npm publish packages/babel-preset-lynjs --access public --tag "$TAG"',
         // If failure, tag rollback + fallback to deprecate
