@@ -1,0 +1,16 @@
+{
+  "name": "@lynjs/reactive",
+  "description": "",
+  "version": "0.1.0",
+  "private": true,
+  "author": "MoGi <mogiblahblah@gmail.com>",
+  "license": "BSD-3-Clause",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lynjs-dev/lynjs.git"
+  },
+  "main": "src/index.ts",
+  "scripts": {},
+  "dependencies": {},
+  "devDependencies": {}
+}
