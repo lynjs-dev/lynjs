@@ -1,3 +1,8 @@
+## 0.2.0-next.6 (2025-10-15)
+
+* Merge remote-tracking branch 'origin/next' into next ([bb2e260](https://github.com/lynjs-dev/lynjs/commit/bb2e260))
+* fix: remove '@lynjs/core' dependency from package.json ([1b666f7](https://github.com/lynjs-dev/lynjs/commit/1b666f7))
+
 ## 0.2.0-next.5 (2025-10-15)
 
 * fix: remove '@lynjs/core' dependency from package.json ([e26e1ad](https://github.com/lynjs-dev/lynjs/commit/e26e1ad))
