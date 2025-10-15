@@ -1,6 +1,6 @@
 {
   "name": "babel-preset-lynjs",
-  "version": "0.2.0-next.4",
+  "version": "0.2.0-next.5",
   "description": "Babel preset to transform JSX for LynJS",
   "main": "src/index.js",
   "author": "MoGi <mogiblahblah@gmail.com>",
@@ -43,6 +43,6 @@
     "@babel/preset-env": "^7.28.3",
     "@babel/preset-typescript": "^7.27.1",
     "typescript": "^5.8.3",
-    "lynjs": "^0.2.0-next.4"
+    "lynjs": "^0.2.0-next.5"
   }
 }
