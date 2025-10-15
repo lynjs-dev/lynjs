@@ -1,3 +1,7 @@
+## 0.2.0-next.5 (2025-10-15)
+
+* fix: remove '@lynjs/core' dependency from package.json ([e26e1ad](https://github.com/lynjs-dev/lynjs/commit/e26e1ad))
+
 ## 0.2.0-next.4 (2025-10-14)
 
 * fix: fix `.releaserc.cjs` - Changed the way preset is published ([8aaf370](https://github.com/lynjs-dev/lynjs/commit/8aaf370))
