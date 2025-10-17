@@ -1,0 +1,62 @@
+{
+  "name": "lynjs",
+  "version": "0.2.0-next.5",
+  "description": "A declarative JavaScript library for building fast, lightweight web components",
+  "type": "module",
+  "license": "BSD-3-Clause",
+  "engines": {
+    "node": ">=18"
+  },
+  "files": [
+    "dist",
+    "types",
+    "README.md"
+  ],
+  "module": "dist/index.js",
+  "main": "dist/index.js",
+  "exports": {
+    ".": {
+      "types": "./types/index.d.ts",
+      "import": "./dist/index.ts"
+    },
+    "./package.json": "./package.json",
+    "./lyn-element": {
+      "import": "./dist/lyn-element.js",
+      "types": "./types/index.d.ts"
+    }
+  },
+  "keywords": [
+    "lyn",
+    "lynjs",
+    "ui",
+    "reactive",
+    "components",
+    "performance",
+    "jsx"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "build": "rollup -c && npx tsc -p tsconfig.build.json --emitDeclarationOnly",
+    "test": "NODE_ENV=test npx vitest run --browser.headless",
+    "test:prepare": "npx playwright install",
+    "test:watch": "NODE_ENV=test npx vitest --browser.headless --watch",
+    "test:browser": "NODE_ENV=test npx vitest"
+  },
+  "devDependencies": {
+    "@babel/plugin-transform-typescript": "^7.28.0",
+    "@babel/preset-typescript": "^7.27.1",
+    "@rollup/plugin-babel": "^6.1.0",
+    "@rollup/plugin-commonjs": "^28.0.8",
+    "@rollup/plugin-node-resolve": "^16.0.3",
+    "@vitest/browser": "^3.2.4",
+    "dom-expressions": "^0.40.2",
+    "jsdom": "^27.0.0",
+    "playwright": "^1.56.1",
+    "rollup": "^4.52.4",
+    "rollup-plugin-esbuild": "^6.2.1",
+    "typescript": "^5.9.3",
+    "vite": "^6.4.1",
+    "vite-tsconfig-paths": "^5.1.4",
+    "vitest": "^3.2.4"
+  }
+}

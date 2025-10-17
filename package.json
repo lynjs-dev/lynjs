@@ -1,8 +1,14 @@
 {
-  "name": "lynjs",
+  "name": "lynjs-monorepo",
   "version": "0.2.0-next.6",
-  "private": false,
+  "description": "monorepo for lynjs",
+  "private": true,
   "type": "module",
+  "license": "BSD-3-Clause",
+  "packageManager": "pnpm@10.4.0",
+  "engines": {
+    "pnpm": ">=9.0.0"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/[GITHUB_USER_NAME]/[REPOSITORY_NAME].git"
@@ -13,46 +19,25 @@
       "require": "./src/index.ts"
     }
   },
-  "files": [
-    "README.md",
-    "LICENSE"
-  ],
   "sideEffects": false,
   "scripts": {
-    "build": "echo \"(root) nothing to build yet\"",
-    "clean": "git clean -fdX -e node_modules",
-    "test": "echo \"(root) no tests yet\" && exit 0",
-    "test:core": "npm --prefix packages/core run test",
-    "test:core:watch": "npm --prefix packages/core run test:watch",
-    "test:core:browser": "npm --prefix packages/core run test:browser",
-    "verify:pack": "npm pack --dry-run",
-    "prepublishOnly": "npm run verify:pack",
-    "pack:preset": "npm pack -w packages/babel-preset-lynjs",
-    "publish:preset": "npm publish -w packages/babel-preset-lynjs --access public",
-    "version:preset": "npm version patch -w packages/babel-preset-lynjs",
     "prepare": "husky",
+    "clean": "git clean -fdX -e node_modules",
+    "test": "pnpm --prefix packages/lynjs run test",
+    "build": "pnpm -r --filter=./packages/* build",
+    "__verify:pack": "npm pack --dry-run",
+    "__prepublishOnly": "npm run verify:pack",
+    "__pack:preset": "npm pack -w packages/babel-preset-lynjs",
+    "__publish:preset": "npm publish -w packages/babel-preset-lynjs --access public",
+    "__version:preset": "npm version patch -w packages/babel-preset-lynjs",
     "release": "semantic-release",
-    "lint": "eslint --ext .ts,.tsx,.js,.cjs --report-unused-disable-directives --cache",
-    "lint:all": "eslint . --ext .ts,.tsx,.js,.cjs --report-unused-disable-directives",
-    "lint:fix": "npm run lint -- --fix --max-warnings=0",
+    "lint": "eslint . --report-unused-disable-directives --cache",
+    "lint:fix": "pnpm lint -- --fix --max-warnings=0",
     "format": "prettier . --check --cache",
     "format:fix": "prettier . --write --cache",
-    "lint:ws": "npm run lint -ws --if-present",
-    "format:ws": "npm run format -ws --if-present",
-    "docs:dev": "npm --prefix docs run dev",
-    "docs:build": "npm --prefix docs run build",
-    "docs:preview": "npm --prefix docs run preview"
+    "docs": "pnpm --prefix docs run start",
+    "docs:build": "pnpm --prefix docs run build"
   },
-  "engines": {
-    "node": ">=18"
-  },
-  "publishConfig": {
-    "access": "public"
-  },
-  "workspaces": [
-    "packages/*"
-  ],
-  "dependencies": {},
   "devDependencies": {
     "@commitlint/cli": "^19.8.1",
     "@commitlint/config-conventional": "^19.8.1",
@@ -65,16 +50,16 @@
     "@semantic-release/npm": "^12.0.2",
     "@semantic-release/release-notes-generator": "^14.1.0",
     "@testing-library/dom": "^10.4.1",
+    "babel-preset-lynjs": "workspace:^",
     "eslint": "^9.35.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.4",
     "husky": "^9.1.7",
     "lint-staged": "^15.5.2",
+    "lynjs": "workspace:^",
     "prettier": "^3.6.2",
     "semantic-release": "^24.2.8",
-    "typescript": "^5.9.3",
-    "typescript-eslint": "^8.44.0",
-    "vitest": "^3.2.4"
+    "typescript-eslint": "^8.44.0"
   },
   "lint-staged": {
     "*.{ts,tsx,js,cjs,mjs}": [

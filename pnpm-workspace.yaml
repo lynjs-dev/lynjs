@@ -1,0 +1,8 @@
+# pnpm-workspace.yaml
+packages:
+  - 'docs'
+  - 'packages/*'
+  - 'packages/*/*'
+  - '!**/dist'
+  - '!**/build'
+  - '!**/.next'

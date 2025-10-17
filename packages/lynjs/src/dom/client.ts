@@ -1,7 +1,7 @@
-export * from 'dom-expressions/src/client';
-import { insert, MountableElement } from 'dom-expressions/src/client';
-import { JSX } from 'dom-expressions/src/jsx';
-import { root } from '@lynjs/reactive';
+export * from 'dom-expressions/src/client.js';
+import { insert, MountableElement } from 'dom-expressions/src/client.js';
+import { JSX } from 'dom-expressions/src/jsx.js';
+import { root } from '../reactive.ts';
 
 export interface RenderOptions {
   owner?: unknown;

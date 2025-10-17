@@ -1,0 +1,13 @@
+# .npmignore
+node_modules/
+docs/
+scripts/
+.idea/
+.github/
+.husky/
+*.tgz
+.eslintrc*
+.eslintcache
+.prettier*
+commitlint.config.*
+.release*.*

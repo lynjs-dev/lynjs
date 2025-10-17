@@ -25,21 +25,29 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: npm
+          cache: pnpm
           registry-url: 'https://registry.npmjs.org'
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
       - name: Install
-        run: npm ci
+        run: pnpm run ci
 
       - name: Lint all
-        run: npm run lint:all
+        run: pnpm run lint
 
       - name: Format check
-        run: npm run format
+        run: pnpm run format
 
-      # (Optional) test/build
+      - name: Format check
+        run: pnpm run build
+
+      # (Optional) core/build
       # - name: Test
-      #   run: npm test
+      #   run: npm core
       # - name: Build
       #   run: npm run build
 
@@ -52,5 +60,5 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-          # HUSKY: 0   # Disable HUSKY hooks in CI (avoid conflicts)
-        run: npm run release
+          HUSKY: 0 # Disable HUSKY hooks in CI (avoid conflicts)
+        run: pnpm run release

@@ -1,8 +1,8 @@
 import { describe, it, expect, beforeAll } from 'vitest';
-import { LynElement } from '@lynjs/core';
+import { LynElement } from 'lyn-element.ts';
 
 describe('LynElement - define', () => {
-  const tag = 'x-test-define-lyn-element';
+  const tag = 'x-core-define-lyn-element';
 
   beforeAll(() => {
     class XTestEl extends LynElement {

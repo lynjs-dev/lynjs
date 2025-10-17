@@ -2,8 +2,13 @@
   "name": "@lynjs/docs",
   "type": "module",
   "version": "0.0.1",
+  "private": true,
+  "license": "BSD-3-Clause",
+  "packageManager": "pnpm@10.4.0",
+  "engines": {
+    "pnpm": ">=9.0.0"
+  },
   "scripts": {
-    "dev": "astro dev",
     "start": "astro dev",
     "build": "astro build",
     "preview": "astro preview",

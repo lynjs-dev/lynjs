@@ -58,9 +58,9 @@ export default [
     },
   },
 
-  // Relax linting rules for test files
+  // Relax linting rules for core files
   {
-    files: ['**/*.test.ts', '**/*.jsx.test.js'],
+    files: ['**/*.core.ts', '**/*.jsx.core.js'],
     rules: { '@typescript-eslint/no-explicit-any': 'off' },
   },
 
