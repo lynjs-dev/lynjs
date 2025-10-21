@@ -4,7 +4,7 @@ const transformTypeScript = require('@babel/plugin-transform-typescript');
 module.exports = function (context, options) {
   const jsxOpts = Object.assign(
     {
-      moduleName: '@lynjs/dom',
+      moduleName: 'lynjs/dom',
       contextToCustomElements: true,
       wrapConditionals: true,
       generate: 'dom',

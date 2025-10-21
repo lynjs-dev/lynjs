@@ -16,13 +16,16 @@
   "main": "dist/index.js",
   "exports": {
     ".": {
-      "types": "./types/index.d.ts",
+      "types": "./dist/index.d.ts",
       "import": "./dist/index.ts"
     },
     "./package.json": "./package.json",
     "./lyn-element": {
-      "import": "./dist/lyn-element.js",
-      "types": "./types/index.d.ts"
+      "types": "./dist/lyn-element.d.ts",
+      "import": "./dist/lyn-element.js"
+    },
+    "./jsx-runtime": {
+      "types": "./types/jsx.d.ts"
     }
   },
   "keywords": [

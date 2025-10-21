@@ -4,7 +4,7 @@ import commonjs from '@rollup/plugin-commonjs';
 import babel from '@rollup/plugin-babel';
 
 export default defineConfig({
-  input: ['src/reactive.ts'],
+  input: ['src/index.ts', 'src/reactive.ts', 'src/dom/client.ts'],
   treeshake: { moduleSideEffects: false },
   output: {
     dir: 'dist',
@@ -28,6 +28,15 @@ export default defineConfig({
       babelHelpers: 'bundled',
       extensions: ['.js', '.ts', '.jsx', '.tsx'],
       presets: ['babel-preset-lynjs'],
+      plugins: [
+        [
+          'babel-plugin-transform-rename-import',
+          {
+            original: 'rxcore',
+            replacement: '../../../src/reactive.ts',
+          },
+        ],
+      ],
     }),
   ],
 });
