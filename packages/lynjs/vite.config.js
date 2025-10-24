@@ -2,11 +2,14 @@ import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { defineConfig } from 'vitest/config';
 import * as viteTSConfigPaths from 'vite-tsconfig-paths';
+import lynPlugin from 'vite-plugin-lynjs';
 
 console.log('Load package.json...');
 const pkg = JSON.parse(readFileSync(resolve(__dirname, 'package.json'), 'utf8'));
 const VERSION = JSON.stringify(pkg?.version ?? '');
 console.log(`LynJS Version: ${VERSION}`);
+
+const reactiveEntry = resolve(__dirname, 'src/reactive.ts');
 
 export default defineConfig({
   define: {
@@ -20,12 +23,15 @@ export default defineConfig({
     jsx: 'preserve', // disable jsx from being converted by esbuild
   },
 
-  plugins: [viteTSConfigPaths.default()],
+  plugins: [viteTSConfigPaths.default(), lynPlugin({ moduleName: 'dom' })],
 
   resolve: {
-    alias: {
-      '@': resolve(__dirname, 'src'),
-    },
+    alias: [{ find: /^rxcore$/, replacement: reactiveEntry }],
+    conditions: ['module', 'import', 'browser', 'default'],
+  },
+
+  optimizeDeps: {
+    include: ['dom-expressions/src/client.js'],
   },
 
   test: {

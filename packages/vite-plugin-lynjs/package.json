@@ -1,0 +1,23 @@
+{
+  "name": "vite-plugin-lynjs",
+  "version": "0.1.0",
+  "description": "Vite plugin to transform JSX for Lyn.JS using babel-preset-lynjs",
+  "main": "src/index.js",
+  "types": "src/index.d.ts",
+  "type": "module",
+  "author": "MoGi <mogiblahblah@gmail.com>",
+  "license": "BSD-3-Clause",
+  "keywords": [
+    "vite",
+    "plugin",
+    "lynjs",
+    "jsx",
+    "babel"
+  ],
+  "devDependencies": {
+    "@babel/core": "^7.28.4",
+    "@types/node": "^24.1.0",
+    "@rollup/pluginutils": "^5.2.0",
+    "babel-preset-lynjs": "workspace:^"
+  }
+}

@@ -1,18 +1,10 @@
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
-
 import { defineConfig } from 'rollup';
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
-import tsconfigPaths from 'rollup-plugin-tsconfig-paths';
 import babel from '@rollup/plugin-babel';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const reactiveEntry = path.resolve(__dirname, 'src/reactive.ts');
-
 export default defineConfig({
-  input: ['src/index.ts', 'src/reactive.ts', 'src/dom.ts', 'src/dom/client.ts'],
+  input: ['src/index.ts', 'src/client.ts'],
   treeshake: { moduleSideEffects: false },
   output: {
     dir: 'dist',
@@ -24,26 +16,23 @@ export default defineConfig({
     generatedCode: 'es2015',
   },
   plugins: [
-    tsconfigPaths(),
-
     resolve({
-      browser: true,
-      extensions: ['.js', '.ts', '.jsx', '.tsx'],
-      exportConditions: ['browser', 'module', 'import'],
+      extensions: ['.js', '.ts'],
+      exportConditions: ['module', 'import'],
       preferBuiltins: false,
     }),
 
     commonjs(),
     babel({
       babelHelpers: 'bundled',
-      extensions: ['.js', '.ts', '.jsx', '.tsx'],
-      presets: ['babel-preset-lynjs'],
+      extensions: ['.js', '.ts'],
+      presets: ['@babel/preset-typescript'],
       plugins: [
         [
           'babel-plugin-transform-rename-import',
           {
             original: 'rxcore',
-            replacement: reactiveEntry,
+            replacement: '@lynjs/reactive',
           },
         ],
       ],

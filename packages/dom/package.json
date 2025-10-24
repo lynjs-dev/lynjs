@@ -1,0 +1,45 @@
+{
+  "name": "@lynjs/dom",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@10.4.0",
+  "engines": {
+    "pnpm": ">=9.0.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "rollup -c && npx tsc --emitDeclarationOnly",
+    "jsx-update": "node src/types/jsx-update.mjs"
+  },
+  "main": "src/index.js",
+  "exports": {
+    ".": {
+      "default": "./src/index.ts"
+    },
+    "./types": {
+      "default": "./types"
+    },
+    "./client": {
+      "default": "./src/client.ts"
+    },
+    "./jsx-runtime": {
+      "types": "./types/jsx.d.ts"
+    }
+  },
+  "author": "MoGi",
+  "license": "BSD-3-Clause",
+  "description": "DOM runtime utilities for JSX compiled with babel-plugin-jsx-dom-expressions, used in Lyn.js.",
+  "dependencies": {
+    "csstype": "^3.1.3",
+    "dom-expressions": "^0.40.2"
+  },
+  "devDependencies": {
+    "@babel/preset-typescript": "^7.27.1",
+    "@rollup/plugin-babel": "^6.1.0",
+    "@rollup/plugin-commonjs": "^28.0.8",
+    "@rollup/plugin-node-resolve": "^16.0.3",
+    "babel-plugin-transform-rename-import": "^2.3.0",
+    "rollup": "^4.52.5"
+  }
+}

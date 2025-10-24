@@ -1,4 +1,4 @@
-import { LynButtonElement } from "../src/components/inputs/button.tsx";
+import { LynButtonElement } from '../src/components/inputs/button.tsx';
 
 declare global {
   interface HTMLElementTagNameMap {

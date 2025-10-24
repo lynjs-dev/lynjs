@@ -10,14 +10,12 @@ describe('LynElement - define', () => {
         if (!this.shadowRoot) {
           this.attachShadow({ mode: 'open' });
         }
-        const el = this.render();
+        const el = this.render() as Node;
         if (el) this.shadowRoot!.appendChild(el);
       }
 
       protected render() {
-        const el = document.createElement('div');
-        el.textContent = 'Hello World';
-        return el;
+        return <div>Hello World</div>;
       }
     }
 

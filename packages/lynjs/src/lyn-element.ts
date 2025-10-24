@@ -1,3 +1,5 @@
+import { JSX } from '../types/jsx.js';
+
 export class LynElement extends HTMLElement {
   /**
    * Component root policy: whether to use Shadow DOM.
@@ -28,7 +30,7 @@ export class LynElement extends HTMLElement {
       this.attachShadow({ mode: 'open' });
     }
 
-    const node = this.render();
+    const node = this.render() as Node;
     if (node) this.hostNode.appendChild(node);
   }
 
@@ -36,7 +38,7 @@ export class LynElement extends HTMLElement {
    * Subclasses override to return a Node.
    * Default returns an empty text node (kept as near no-op).
    */
-  protected render(): Node | null {
+  protected render(): JSX.Element {
     return document.createTextNode('');
   }
 }

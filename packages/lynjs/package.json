@@ -4,8 +4,10 @@
   "description": "A declarative JavaScript library for building fast, lightweight web components",
   "type": "module",
   "license": "BSD-3-Clause",
+  "packageManager": "pnpm@10.4.0",
   "engines": {
-    "node": ">=18"
+    "node": ">=18",
+    "pnpm": ">=9.0.0"
   },
   "files": [
     "dist",
@@ -17,12 +19,20 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/index.ts"
+      "default": "./dist/index.ts"
     },
     "./package.json": "./package.json",
     "./lyn-element": {
       "types": "./dist/lyn-element.d.ts",
-      "import": "./dist/lyn-element.js"
+      "default": "./dist/lyn-element.js"
+    },
+    "./reactive": {
+      "types": "./dist/reactive.d.ts",
+      "default": "./dist/reactive.js"
+    },
+    "./dom": {
+      "types": "./dist/lyn-element.d.ts",
+      "default": "./dist/dom/index.js"
     },
     "./jsx-runtime": {
       "types": "./types/jsx.d.ts"
@@ -52,14 +62,18 @@
     "@rollup/plugin-commonjs": "^28.0.8",
     "@rollup/plugin-node-resolve": "^16.0.3",
     "@vitest/browser": "^3.2.4",
-    "dom-expressions": "^0.40.2",
+    "babel-plugin-transform-rename-import": "^2.3.0",
     "jsdom": "^27.0.0",
     "playwright": "^1.56.1",
     "rollup": "^4.52.4",
     "rollup-plugin-esbuild": "^6.2.1",
+    "rollup-plugin-tsconfig-paths": "^1.5.2",
     "typescript": "^5.9.3",
     "vite": "^6.4.1",
     "vite-tsconfig-paths": "^5.1.4",
     "vitest": "^3.2.4"
+  },
+  "dependencies": {
+    "dom-expressions": "^0.40.2"
   }
 }
