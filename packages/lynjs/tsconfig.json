@@ -3,7 +3,7 @@
   "include": ["src/**/*.ts", "src/**/*.tsx", "types/**/*.ts", "test/**/*.ts", "test/**/*.tsx"],
   "exclude": ["dist", "node_modules"],
   "compilerOptions": {
-    "typeRoots": ["./node_modules/@types"],
+    "typeRoots": ["./node_modules/@types", "./types"],
     "jsx": "preserve",
     "jsxImportSource": "lynjs",
     "rootDir": "./src",

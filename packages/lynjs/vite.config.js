@@ -31,7 +31,8 @@ export default defineConfig({
   },
 
   optimizeDeps: {
-    include: ['dom-expressions/src/client.js'],
+    exclude: ['dom-expressions/src/client.js'],
+    force: true,
   },
 
   test: {

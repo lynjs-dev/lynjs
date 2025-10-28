@@ -1,6 +1,7 @@
 export * from 'dom-expressions/src/client.js';
 import { insert, MountableElement } from 'dom-expressions/src/client.js';
-import { JSX } from 'dom-expressions/src/jsx.js';
+import { JSX } from '../../types/jsx.js';
+import { JSX as _JSX } from 'dom-expressions/src/jsx.js';
 import { root } from '../reactive.ts';
 
 export interface RenderOptions {
@@ -71,7 +72,7 @@ export function render(
 
   const dispose = root(() => {
     if (element === document) code();
-    else insert(element, code(), element.firstChild ? null : undefined, init);
+    else insert(element, code(), element.firstChild ? null : undefined, init as _JSX.Element);
   }, options.owner);
 
   return () => {

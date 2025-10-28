@@ -1,4 +1,5 @@
 import { JSX } from '../types/jsx.js';
+import { render } from './dom/client.js';
 
 export class LynElement extends HTMLElement {
   /**
@@ -29,9 +30,9 @@ export class LynElement extends HTMLElement {
     if ((this.constructor as typeof LynElement).useShadow && !this.shadowRoot) {
       this.attachShadow({ mode: 'open' });
     }
-
-    const node = this.render() as Node;
-    if (node) this.hostNode.appendChild(node);
+    queueMicrotask(() => {
+      render(this.render.bind(this), this.hostNode);
+    });
   }
 
   /**
