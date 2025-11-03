@@ -1,19 +1,18 @@
 import { describe, it, expect, beforeAll } from 'vitest';
 import { LynElement } from 'lyn-element.ts';
 import { createSignal } from '../src/reactive.js';
+import { element } from '../src/decorator.js';
 
 describe('LynElement - define', () => {
   const tag = 'x-core-define-lyn-element';
+
+  @element(tag)
   class XTestEl extends LynElement {
     public content = createSignal('Hello World');
 
     protected render() {
       return <div>{this.content.get}</div>;
     }
-  }
-
-  if (!customElements.get(tag)) {
-    customElements.define(tag, XTestEl);
   }
 
   beforeAll(() => {});

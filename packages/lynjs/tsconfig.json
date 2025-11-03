@@ -1,5 +1,5 @@
 {
-  "extends": "../../tsconfig.base.json",
+  "extends": "../babel-preset-lynjs/tsconfig.base.json",
   "include": ["src/**/*.ts", "src/**/*.tsx", "types/**/*.ts", "test/**/*.ts", "test/**/*.tsx"],
   "exclude": ["dist", "node_modules"],
   "compilerOptions": {

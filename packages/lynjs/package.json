@@ -56,16 +56,16 @@
     "test:browser": "NODE_ENV=test npx vitest"
   },
   "devDependencies": {
-    "@babel/plugin-transform-typescript": "^7.28.0",
-    "@babel/preset-typescript": "^7.27.1",
+    "@babel/preset-typescript": "^7.28.5",
     "@rollup/plugin-babel": "^6.1.0",
-    "@rollup/plugin-commonjs": "^28.0.8",
+    "@rollup/plugin-commonjs": "^28.0.9",
     "@rollup/plugin-node-resolve": "^16.0.3",
     "@vitest/browser": "^3.2.4",
     "babel-plugin-transform-rename-import": "^2.3.0",
-    "jsdom": "^27.0.0",
+    "babel-preset-lynjs": "workspace:^",
+    "jsdom": "^27.1.0",
     "playwright": "^1.56.1",
-    "rollup": "^4.52.4",
+    "rollup": "^4.52.5",
     "rollup-plugin-esbuild": "^6.2.1",
     "rollup-plugin-tsconfig-paths": "^1.5.2",
     "typescript": "^5.9.3",
@@ -74,6 +74,6 @@
     "vitest": "^3.2.4"
   },
   "dependencies": {
-    "dom-expressions": "^0.40.2"
+    "dom-expressions": "^0.40.3"
   }
 }

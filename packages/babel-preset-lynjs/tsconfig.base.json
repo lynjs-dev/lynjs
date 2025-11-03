@@ -2,12 +2,13 @@
   "compilerOptions": {
     "target": "ES2015",
     "module": "Node16",
-    "moduleResolution": "Node16",
     "lib": ["ES2022", "DOM"],
+    "moduleResolution": "Node16",
+    "jsxImportSource": "lynjs",
+    "experimentalDecorators": false,
     "useDefineForClassFields": false,
     "downlevelIteration": true,
     "declaration": true,
-
     "declarationMap": true,
     "sourceMap": true,
     "strict": true,
