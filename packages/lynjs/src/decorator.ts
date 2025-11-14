@@ -12,10 +12,8 @@
  * @fetch - define a fetch
  */
 
-export type ConstructorClass<T = object> = new (...args: unknown[]) => T;
-export type AbstractClass<T = object> = abstract new (...args: unknown[]) => T;
-export type EventClass<E extends Event = Event, Init = unknown> = new (type: string, eventInitDict?: Init) => E;
-export type Class<T = object> = ConstructorClass<T> | AbstractClass<T>;
+import { EventClass, Class } from '../types/class.js';
+// import { defineElement } from './element/utils/define.js';
 
 export type Forward = string | (() => string);
 
@@ -93,21 +91,30 @@ function getDecoratorMetadata<T>(context: DecoratorContext, key: string): T[] {
   return metadata;
 }
 
+function applyProperties(constructor: Class, context: ClassDecoratorContext) {
+  const properties = getDecoratorMetadata<PropertyDecoratorMetadata>(context, 'properties');
+  for (const { option, context } of properties) {
+    option.define?.(constructor, option, context);
+  }
+}
+
 export function metaclass(constructor: Class, context: ClassDecoratorContext) {
   console.log(constructor, context);
+  applyProperties(constructor, context);
+  // 여시서 properties 처리를 위한 함수 호출
 }
 
 export function element(name: string, options?: ElementDefinitionOptions) {
   return (constructor: CustomElementConstructor, context: ClassDecoratorContext) => {
     metaclass(constructor, context);
-    if (typeof customElements == 'undefined') return;
-
     // At this point, the class body is fully defined, but
     // Babel/TypeScript will attach static fields and methods *after* this decorator runs.
     // If you register the element here, the constructor may be called
     // before static fields/methods are available, leading to runtime bugs.
     // To ensure all statics are bound, defer registration with queueMicrotask.
-    queueMicrotask(() => customElements.define(name, constructor, options));
+
+    // todo - defineElement
+    //queueMicrotask(() => defineElement(name, constructor, options));
   };
 }
 

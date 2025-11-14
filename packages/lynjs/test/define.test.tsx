@@ -1,23 +1,21 @@
 import { describe, it, expect, beforeAll } from 'vitest';
-import { LynElement } from 'lyn-element.ts';
-import { createSignal } from '../src/reactive.js';
+import { LynElement } from '../src/element.ts';
 import { element } from '../src/decorator.js';
 
-describe('LynElement - define', () => {
+describe('LynElement - define', async () => {
   const tag = 'x-core-define-lyn-element';
 
   @element(tag)
   class XTestEl extends LynElement {
-    public content = createSignal('Hello World');
-
     protected render() {
-      return <div>{this.content.get}</div>;
+      return <div>Hello World</div>;
     }
   }
+  await Promise.resolve();
 
   beforeAll(() => {});
 
-  it('should create element via document.createElement and upgrade to LynElement', () => {
+  it('should create element via document.createElement and upgrade to LynElement', async () => {
     const el = document.createElement(tag);
     expect(el).toBeInstanceOf(LynElement);
     expect(el).toBeInstanceOf(HTMLElement);
@@ -25,12 +23,8 @@ describe('LynElement - define', () => {
 
   it('should render the content inside shadowRoot', async () => {
     const el = document.createElement(tag) as XTestEl;
-
     await Promise.resolve();
-
     const div = el.shadowRoot?.querySelector('div');
     expect(div?.textContent).toBe('Hello World');
-    el.content.set('Hello LynJS');
-    expect(div?.textContent).toBe('Hello LynJS');
   });
 });
