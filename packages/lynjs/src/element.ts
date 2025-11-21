@@ -1,1 +1,1 @@
-export { LynElement } from './element/lyn-element.ts';
+export { Controller } from './element/controller.ts';

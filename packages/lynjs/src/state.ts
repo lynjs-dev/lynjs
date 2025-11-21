@@ -1,28 +1,31 @@
 export type State = Map<string | symbol, unknown>;
 
-const states = new WeakMap<object, State>();
+const stateStorage = new WeakMap<object, State>();
 
-export const STATE = Symbol('state');
-
-export function createState(obj: object): State {
-  const state = states.get(obj) || new Map();
-  states.set(obj, state);
-  return state;
-}
-
-export function setState<T>(obj: object, key: string | symbol, value: T): void {
-  const map = states.get(obj) || new Map();
-  states.set(obj, map);
+function setValue<T>(obj: object, key: string | symbol, value: T): void {
+  const map = stateStorage.get(obj) || new Map();
+  stateStorage.set(obj, map);
   map.set(key, value);
 }
 
-export function getState<T>(obj: object, key: string | symbol, defaultValue?: T): T | undefined {
-  const map = states.get(obj) || new Map();
+function getValue<T>(obj: object, key: string | symbol, defaultValue?: T): T | undefined {
+  const map = stateStorage.get(obj) || new Map();
   if (!map || !map.has(key)) return defaultValue;
   return map.get(key) as T;
 }
 
-export default {
-  setState,
-  getState,
+function get(obj: object): State {
+  const state = stateStorage.get(obj) || new Map();
+  stateStorage.set(obj, state);
+  return state;
+}
+
+export const state = {
+  get,
+  getValue,
+  setValue,
 };
+
+Object.freeze(state);
+
+export default state;

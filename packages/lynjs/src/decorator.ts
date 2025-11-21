@@ -13,7 +13,7 @@
  */
 
 import { EventClass, Class } from '../types/class.js';
-// import { defineElement } from './element/utils/define.js';
+import { defineElement, DefineElementOptions } from './element/utils/define.ts';
 
 export type Forward = string | (() => string);
 
@@ -104,17 +104,10 @@ export function metaclass(constructor: Class, context: ClassDecoratorContext) {
   // 여시서 properties 처리를 위한 함수 호출
 }
 
-export function element(name: string, options?: ElementDefinitionOptions) {
-  return (constructor: CustomElementConstructor, context: ClassDecoratorContext) => {
-    metaclass(constructor, context);
-    // At this point, the class body is fully defined, but
-    // Babel/TypeScript will attach static fields and methods *after* this decorator runs.
-    // If you register the element here, the constructor may be called
-    // before static fields/methods are available, leading to runtime bugs.
-    // To ensure all statics are bound, defer registration with queueMicrotask.
-
-    // todo - defineElement
-    //queueMicrotask(() => defineElement(name, constructor, options));
+export function element<T extends ControllerClass = ControllerClass>(name: string, options?: DefineElementOptions) {
+  return (constructor: T, context: ClassDecoratorContext) => {
+    metaclass(constructor as unknown as Class, context);
+    queueMicrotask(() => defineElement<T>(name, constructor, options));
   };
 }
 
