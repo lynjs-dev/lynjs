@@ -1,12 +1,12 @@
 /**
  * metaclass - decorators:
- * @element - define a custom element
+ * @hostNode - define a custom hostNode
  * @state - define a reactive state
  * @persist - define a persistent(storage) attribute
  * @attr - define a reactive attribute
  * @ref - define a ref
  * @event - define an event listener
- * @asTag - define a dynamic element tag
+ * @asTag - define a dynamic hostNode tag
  * @effect - define a reactive effect
  * @memo - define a memo
  * @fetch - define a fetch
@@ -14,6 +14,7 @@
 
 import { EventClass, Class } from '../types/class.js';
 import { defineElement, DefineElementOptions } from './element/utils/define.ts';
+import type { ControllerClass } from './element/types/element.d.ts';
 
 export type Forward = string | (() => string);
 
@@ -99,9 +100,8 @@ function applyProperties(constructor: Class, context: ClassDecoratorContext) {
 }
 
 export function metaclass(constructor: Class, context: ClassDecoratorContext) {
-  console.log(constructor, context);
   applyProperties(constructor, context);
-  // 여시서 properties 처리를 위한 함수 호출
+  // todo:  여기에서 properties 처리를 위한 함수 호출
 }
 
 export function element<T extends ControllerClass = ControllerClass>(name: string, options?: DefineElementOptions) {

@@ -12,18 +12,18 @@ export interface RenderOptions {
 
 /**
  * This function creates a reactive root via {@link root}, executes the given JSX-producing `code`,
- * and mounts its resulting DOM tree into the provided `element`. It returns a disposer function
+ * and mounts its resulting DOM tree into the provided `hostNode`. It returns a disposer function
  * that can be called later to clean up all reactive effects, signals, and resources created
  * during rendering.
  *
- * @param code - A function returning a JSX element (the component tree to render).
- * @param element - The target DOM node where the rendered content will be inserted.
+ * @param code - A function returning a JSX hostNode (the component tree to render).
+ * @param element - The target DOM hostNode where the rendered content will be inserted.
  *                  Can be a standard Element, ShadowRoot, DocumentFragment, or Document.
- * @param init - (Optional) Initial JSX element or hydratable node list used for hydration.
+ * @param init - (Optional) Initial JSX hostNode or hydratable hostNode list used for hydration.
  * @param options - (Optional) Rendering options.
  * @param options.owner - An existing reactive owner to attach this render tree to.
  *                        If omitted, a new root owner is created.
- * @param options.clearOnDispose - When `true`, clears the element’s text content after disposal.
+ * @param options.clearOnDispose - When `true`, clears the hostNode’s text content after disposal.
  *                                 Defaults to `false`. This should generally be `false` for
  *                                 Custom Elements, since the browser manages their lifecycle.
  * @param options.onDispose - A callback executed immediately after the render tree has been disposed.
@@ -31,7 +31,7 @@ export interface RenderOptions {
  * @returns A disposer function. Calling it will:
  * - Tear down all reactive computations and effects created within this render root.
  * - Invoke `options.onDispose`, if provided.
- * - Optionally clear the element’s contents if `options.clearOnDispose` is `true`.
+ * - Optionally clear the hostNode’s contents if `options.clearOnDispose` is `true`.
  *
  * @example
  * ```ts
@@ -66,7 +66,7 @@ export function render(
 ) {
   if (!element) {
     throw new Error(
-      "The `element` passed to `render(..., element)` doesn't exist. Make sure `element` exists in the document.",
+      "The `hostNode` passed to `render(..., hostNode)` doesn't exist. Make sure `hostNode` exists in the document.",
     );
   }
 

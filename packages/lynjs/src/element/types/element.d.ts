@@ -1,5 +1,4 @@
 import type { JSX } from '../../../types/jsx.d.ts';
-import { HOST } from '../symbol.ts';
 
 export type PersistedState = Record<string | symbol, unknown>;
 
@@ -60,7 +59,7 @@ export interface HostContext extends ElementLifecycle, AttrPort, EventTarget {
 }
 
 export interface ControllerContext extends ElementLifecycle, AttrPort, EventTarget, SchedulerPort, RenderPort {
-  element: HostContext;
+  hostNode: HostContext;
 }
 
 export interface ControllerClassStatic {

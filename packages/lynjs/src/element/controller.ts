@@ -2,6 +2,7 @@ import { JSX } from '../../types/jsx.js';
 import { HOST } from './symbol.ts';
 import type { ControllerContext, HostContext } from './types/element.d.ts';
 
+// eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
 export class Controller implements ControllerContext {
   static readonly useShadow = true as const;
 
@@ -9,36 +10,36 @@ export class Controller implements ControllerContext {
 
   constructor() {}
 
-  public get element(): HostContext {
+  public get hostNode(): HostContext {
     return this[HOST];
   }
 
-  public set element(value: HostContext) {
+  public set hostNode(value: HostContext) {
     // Allow binding only once during createController()
     if (this[HOST] !== undefined) {
-      throw new Error('Controller.element can only be assigned during controller creation.');
+      throw new Error('Controller.hostNode can only be assigned during controller creation.');
     }
     this[HOST] = value;
   }
 
   get isConnected(): boolean {
-    return this[HOST].isConnected;
+    return this.hostNode.isConnected;
   }
 
   getAttribute(name: string) {
-    return this[HOST].getAttribute(name);
+    return this.hostNode.getAttribute(name);
   }
 
   setAttribute(name: string, value: string): void {
-    this[HOST].setAttribute(name, value);
+    this.hostNode.setAttribute(name, value);
   }
 
   removeAttribute(name: string): void {
-    this[HOST].removeAttribute(name);
+    this.hostNode.removeAttribute(name);
   }
 
   hasAttribute(name: string): boolean {
-    return this[HOST].hasAttribute(name);
+    return this.hostNode.hasAttribute(name);
   }
 
   addEventListener(
@@ -46,11 +47,11 @@ export class Controller implements ControllerContext {
     listener: EventListenerOrEventListenerObject,
     options?: boolean | AddEventListenerOptions,
   ): void {
-    this[HOST].addEventListener(type, listener, options);
+    this.hostNode.addEventListener(type, listener, options);
   }
 
   dispatchEvent(event: Event): boolean {
-    return this[HOST].dispatchEvent(event);
+    return this.hostNode.dispatchEvent(event);
   }
 
   removeEventListener(
@@ -58,7 +59,7 @@ export class Controller implements ControllerContext {
     listener: EventListenerOrEventListenerObject,
     options?: boolean | EventListenerOptions,
   ): void {
-    this[HOST].removeEventListener(type, listener, options);
+    this.hostNode.removeEventListener(type, listener, options);
   }
 
   queueMicrotask(cb: () => void): void {
@@ -119,8 +120,8 @@ for (const name of methodNames) {
   if (name in Controller.prototype) continue;
   Object.defineProperty(Controller.prototype, name, {
     value: function (...args: unknown[]): unknown {
-      const host = this[HOST];
-      return host[name](...args);
+      const node = this.hostNode;
+      return node[name](...args);
     },
     writable: true,
     configurable: true,
@@ -143,6 +144,7 @@ for (const name of propertyNames) {
   });
 }
 
-// export interface Controller extends HTMLElement, ControllerContext {
-//   render(): JSX.Element;
-// }
+// eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
+export interface Controller extends HTMLElement, ControllerContext {
+  render(): JSX.Element;
+}

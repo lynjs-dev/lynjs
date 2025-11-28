@@ -34,7 +34,7 @@
 * docs: modified markdowns with prettier ([d76df9c](https://github.com/lynjs-dev/lynjs/commit/d76df9c))
 * docs: modified the blog draft ([cde3cfc](https://github.com/lynjs-dev/lynjs/commit/cde3cfc))
 * docs: rename from '2025.09.16-01.using_lynelement_in_docs.ko.md' ([d53bcb0](https://github.com/lynjs-dev/lynjs/commit/d53bcb0))
-* test: added custom element define test code ([7ca9a04](https://github.com/lynjs-dev/lynjs/commit/7ca9a04))
+* test: added custom hostNode define test code ([7ca9a04](https://github.com/lynjs-dev/lynjs/commit/7ca9a04))
 * Merge remote-tracking branch 'origin/next' into next ([d20bee9](https://github.com/lynjs-dev/lynjs/commit/d20bee9))
 
 ## 0.2.0-next.2 (2025-09-18)

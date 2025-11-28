@@ -1,1 +1,1 @@
-export { LynElement } from './lyn-element.ts';
+export { LynElement } from './lyn-hostNode.ts';

@@ -124,9 +124,9 @@ LynJS는 최소한의 오버헤드로 빠르고 현대적인 웹 컴포넌트를
 아래는 반응성 프로퍼티 선언, 부수 효과 처리, JSX 렌더링 방법을 보여주는 간단한 LynJS 컴포넌트 예제입니다.
 
 ```tsx
-import { LynElement, attr, state, element, safeInterval } from '@lynjs/core';
+import { LynElement, attr, state, hostNode, safeInterval } from '@lynjs/core';
 
-@element('my-counter')
+@hostNode('my-counter')
 export class MyCounter extends LynElement {
   @attr count = 0;
   @state running = true;

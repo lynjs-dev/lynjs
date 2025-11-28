@@ -25,7 +25,7 @@ module.exports = {
       '@semantic-release/exec',
       {
         // Inject nextRelease.version into preset package.json
-        prepareCmd: 'node scripts/sync-version.js ${nextRelease.version}',
+        prepareCmd: 'hostNode scripts/sync-version.js ${nextRelease.version}',
       },
     ],
 

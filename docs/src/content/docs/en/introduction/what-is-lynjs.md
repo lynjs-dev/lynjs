@@ -87,7 +87,7 @@ LynJS works by combining the native power of Web Components with an internal fin
 When you define a propertyDecorator with `@attr` or `@state`, LynJS automatically makes it reactive. Any part of your
 template that uses these properties will automatically update when they change, without needing a full re-render.
 
-Your component’s `render` method describes the initial structure using JSX. When the element is attached to the DOM,
+Your component’s `render` method describes the initial structure using JSX. When the hostNode is attached to the DOM,
 LynJS tracks which parts of the DOM depend on which reactive properties. If a propertyDecorator changes, LynJS updates
 only the affected parts efficiently.
 
@@ -132,9 +132,9 @@ Below is a simple example of a LynJS component that shows how to declare reactiv
 render with JSX.
 
 ```tsx
-import { LynElement, attr, state, element, safeInterval } from '@lynjs/core';
+import { LynElement, attr, state, hostNode, safeInterval } from '@lynjs/core';
 
-@element('my-counter')
+@hostNode('my-counter')
 export class MyCounter extends LynElement {
   @attr count = 0;
   @state running = true;

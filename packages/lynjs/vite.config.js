@@ -20,7 +20,7 @@ export default defineConfig({
   },
 
   esbuild: {
-    jsx: 'preserve', // disable jsx from being converted by esbuild
+    jsx: 'preserve',
   },
 
   plugins: [viteTSConfigPaths.default(), lynPlugin({ moduleName: 'dom' })],

@@ -22,7 +22,7 @@ jobs:
           fetch-tags: true # Fetch remote tags as well. Required for previous tag history
 
       - name: Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-hostNode@v4
         with:
           node-version: 22
           cache: pnpm

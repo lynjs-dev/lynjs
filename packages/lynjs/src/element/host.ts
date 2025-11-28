@@ -20,7 +20,7 @@ export interface StatePolicy {
 }
 
 export interface HostFactoryOptions {
-  env: RuntimeEnvironment;
+  env?: RuntimeEnvironment;
   DomHost?: HostClass;
   SSRHost?: HostClass;
   TestHost?: HostClass;
@@ -77,7 +77,7 @@ function createHostClass<T extends ControllerContext>(
     constructor() {
       super();
       this[STATE] = state.get(this);
-      this.createController(Controller);
+      this.bindController(Controller);
     }
 
     public get controller(): T {
@@ -88,7 +88,7 @@ function createHostClass<T extends ControllerContext>(
       return this[CONNECTED];
     }
 
-    private createController(ActiveController: ControllerClass<T>): T {
+    private bindController(ActiveController: ControllerClass<T>): T {
       const controller = new ActiveController();
       (controller as Record<symbol, unknown>)[HOST] = this;
       this[CONTROLLER] = controller;
@@ -104,7 +104,7 @@ function createHostClass<T extends ControllerContext>(
         console.error(e);
       }
 
-      const next = this.createController(NewController);
+      const next = this.bindController(NewController);
 
       if (next) {
         try {
@@ -168,9 +168,7 @@ function createSsrHostClass<T extends ControllerContext>(
   tag: string,
 ): HostClass {
   const Base = createHostClass<T>(SsrHostBase, Controller, opts, tag);
-
   class SsrHost extends Base implements HostContext {}
-
   return SsrHost as unknown as HostClass;
 }
 
@@ -180,7 +178,7 @@ export class DefaultHostFactory implements HostFactory {
     options: HostFactoryOptions,
     tag: string,
   ): HostClass {
-    const env: RuntimeEnvironment = options.env;
+    const env: RuntimeEnvironment = options.env || 'dom';
 
     if (env === 'dom') {
       return createDomHostClass(Controller, options as DefineElementOptions, tag);

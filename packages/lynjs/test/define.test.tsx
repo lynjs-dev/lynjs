@@ -1,9 +1,9 @@
-import { describe, it, expect, beforeAll } from 'vitest';
+import { describe, it, beforeAll, expect } from 'vitest';
 import { Controller } from '../src/element.ts';
 import { element } from '../src/decorator.js';
 
 describe('LynElement - define', async () => {
-  const tag = 'x-core-define-lyn-element';
+  const tag = 'x-core-define-lyn-host-node';
 
   @element(tag)
   class XTestEl extends Controller {
@@ -15,9 +15,10 @@ describe('LynElement - define', async () => {
 
   beforeAll(() => {});
 
-  it('should create element via document.createElement and upgrade to LynElement', async () => {
+  it('should create hostNode via document.createElement and upgrade to LynElement', async () => {
+    await Promise.resolve();
     const el = document.createElement(tag) as XTestEl;
-    // expect(el).toBeInstanceOf(LynElement);
+    // expect(el).toBeInstanceOf(Controller);
     expect(el).toBeInstanceOf(HTMLElement);
   });
 
