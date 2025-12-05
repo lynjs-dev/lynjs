@@ -1,20 +1,41 @@
-import type { AttrPort, EventPort } from '../types/element.d.ts';
-import { ATTRIBUTES } from '../symbol.ts';
+import type { JSX } from '../../../types/jsx.d.ts';
+import type { ControllerClass, ControllerContext, HostContext, HydrationPort } from '../types/element.d.ts';
 
-export class SsrHost implements AttrPort, EventPort {
-  private [ATTRIBUTES] = new Map<string, string>();
+export class SsrHost implements HostContext {
+  #attributes = new Map<string, string>();
+
+  hydrate?: HydrationPort | undefined;
+  controller!: ControllerContext;
+  isConnected!: boolean;
+
+  __hmrSwap(_NewController: ControllerClass): void {
+    throw new Error('Method not implemented.');
+  }
+
+  connectedCallback?(): void {
+    throw new Error('Method not implemented.');
+  }
+  disconnectedCallback?(): void {
+    throw new Error('Method not implemented.');
+  }
+  adoptedCallback?(): void {
+    throw new Error('Method not implemented.');
+  }
+  attributeChangedCallback?(_name: string, _oldVal: string | null, _newVal: string | null): void {
+    throw new Error('Method not implemented.');
+  }
 
   getAttribute(name: string): string | null {
-    return this[ATTRIBUTES].has(name) ? (this[ATTRIBUTES].get(name) as string) : null;
+    return this.#attributes.has(name) ? (this.#attributes.get(name) as string) : null;
   }
   setAttribute(name: string, value: string): void {
-    this[ATTRIBUTES].set(name, value);
+    this.#attributes.set(name, value);
   }
   removeAttribute(name: string): void {
-    this[ATTRIBUTES].delete(name);
+    this.#attributes.delete(name);
   }
   hasAttribute(name: string): boolean {
-    return this[ATTRIBUTES].has(name);
+    return this.#attributes.has(name);
   }
 
   // EventPort: no-op in SSR
@@ -33,6 +54,10 @@ export class SsrHost implements AttrPort, EventPort {
     _listener: EventListenerOrEventListenerObject | null,
     _options?: EventListenerOptions | boolean,
   ): void {}
+
+  render(): JSX.Element {
+    return null as unknown as JSX.Element;
+  }
 }
 
 export default SsrHost;

@@ -16,16 +16,16 @@ describe('LynElement - define', async () => {
   beforeAll(() => {});
 
   it('should create hostNode via document.createElement and upgrade to LynElement', async () => {
-    await Promise.resolve();
     const el = document.createElement(tag) as XTestEl;
-    // expect(el).toBeInstanceOf(Controller);
+    await Promise.resolve();
     expect(el).toBeInstanceOf(HTMLElement);
+    expect(el.controller).toBeInstanceOf(Controller);
   });
 
-  // it('should render the content inside shadowRoot', async () => {
-  //   const el = document.createElement(tag) as XTestEl;
-  //   await Promise.resolve();
-  //   const div = el.shadowRoot?.querySelector('div');
-  //   expect(div?.textContent).toBe('Hello World');
-  // });
+  it('should render the content inside shadowRoot', async () => {
+    const el = document.createElement(tag) as XTestEl;
+    await Promise.resolve();
+    const div = el.shadowRoot?.querySelector('div');
+    expect(div?.textContent).toBe('Hello World');
+  });
 });

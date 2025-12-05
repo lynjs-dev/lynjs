@@ -50,19 +50,27 @@ export interface HydrationPort {
   writeEnhancement?(host: unknown, state: PersistedState): void;
 }
 
-export interface HostContext extends ElementLifecycle, AttrPort, EventTarget {
+export interface HostContext extends ElementLifecycle, AttrPort, EventTarget, RenderPort {
   readonly hydrate?: HydrationPort;
-  render?: RenderPort;
-  controller: ControllerContext;
+  readonly controller: ControllerContext;
 
-  __hmrSwap?(NewController: ControllerClass): void;
+  __hmrSwap(NewController: ControllerClass): void;
 }
 
+export interface HostClassStatic {
+  readonly tagName: string;
+  readonly Controller: ControllerClass;
+}
+
+export type HostClass<T extends HostContext = HostContext> = (new () => T) & HostClassStatic;
+
+// ControllerContext 의 render 는 Host에서만 호출되어야 한다.
 export interface ControllerContext extends ElementLifecycle, AttrPort, EventTarget, SchedulerPort, RenderPort {
-  hostNode: HostContext;
+  readonly host: HostContext | null;
 }
 
 export interface ControllerClassStatic {
+  isShadow: boolean;
   observedAttributes?: string[];
   stateVersion?: number;
   persistedKeys?: readonly string[];
@@ -77,8 +85,6 @@ export interface HydrationOrder {
   restoreFromEnhancement?(): void;
   connectAndRender(): void;
 }
-
-export type HostClass<T extends HostContext = HostContext> = new () => T;
 
 export type ControllerClass<T extends ControllerContext = ControllerContext> = (new () => T) &
   Partial<ControllerClassStatic>;

@@ -1,9 +1,8 @@
 import type { ControllerClass, HostClass } from '../types/element.d.ts';
-import { HostFactoryOptions, RuntimeEnvironment, triggerHmrSwap, hostFactory } from '../host.ts';
+import { BaseHost } from '../host.ts';
+import { env } from '../../env.ts';
 
-type HotData = {
-  elements: Record<string, HostClass>;
-};
+type HotData = { elements: Record<string, HostClass> };
 
 interface ImportMetaHot {
   data?: HotData;
@@ -18,31 +17,59 @@ interface ImportMetaWithHot extends ImportMeta {
   readonly hot?: ImportMetaHot;
 }
 
-export interface DefineElementOptions extends HostFactoryOptions, ElementDefinitionOptions {
-  register?: boolean;
+const LOCAL_ELEMENTS: Record<string, HostClass> = {};
+
+function assertCustomElementName(tag: string) {
+  if (!/^[a-z][0-9a-z._-]*-[0-9a-z._-]*$/.test(tag)) {
+    throw new SyntaxError(
+      `Invalid custom element name: "${tag}". It must contain a hyphen and be lowercase. Got "${tag}".`,
+    );
+  }
 }
 
-const isDomEnv = typeof customElements !== 'undefined';
+function assertCustomElementConsistency(
+  tag: string,
+  CustomElement: CustomElementConstructor,
+  Controller: ControllerClass,
+) {
+  const existing = typeof customElements === 'undefined' ? undefined : customElements.get(tag);
+  if (existing !== undefined && existing !== CustomElement) {
+    throw new Error(
+      `Custom element "${tag}" is already defined with a different constructor. ` +
+        `registered=${(existing as { name: string })?.name ?? '<unknown>'}, ` +
+        `attempted=${Controller.name || '<anonymous>'}. ` +
+        `This usually indicates duplicate bundles or a stale HMR cache.`,
+    );
+  }
+}
+
+export type DefineElementOptions = ElementDefinitionOptions;
 
 export function defineElement<T extends ControllerClass = ControllerClass>(
   tag: string,
-  ctorClass: T,
+  Controller: T,
   options?: DefineElementOptions,
 ): HostClass {
-  const env: RuntimeEnvironment = options?.env ?? (isDomEnv ? 'dom' : 'ssr');
+  const hot = (import.meta as ImportMetaWithHot).hot ?? { data: { elements: LOCAL_ELEMENTS } };
+  if (!hot?.data) hot.data = { elements: LOCAL_ELEMENTS };
+  if (!hot?.data?.elements) hot.data.elements = LOCAL_ELEMENTS;
+  const elements = hot?.data?.elements;
 
-  const hot = (import.meta as ImportMetaWithHot).hot;
-  if (hot && !hot.data) hot.data = { elements: {} };
+  const HostClass = tag in elements ? elements[tag] : class extends BaseHost {};
+  Object.defineProperty(HostClass, 'Controller', { get: () => Controller, configurable: true });
+  Object.defineProperty(HostClass, 'tagName', { get: () => tag, configurable: false });
 
-  const elements = hot?.data?.elements ?? {};
+  assertCustomElementName(tag);
+  assertCustomElementConsistency(tag, HostClass as unknown as CustomElementConstructor, Controller);
 
-  const HostClass = elements[tag] ?? hostFactory.resolve(ctorClass, { ...(options ?? {}), env }, tag);
-
-  if (tag in elements) {
-    triggerHmrSwap<T>(tag, ctorClass);
-  } else if (env === 'dom' && isDomEnv && (options?.register ?? true) && !customElements.get(tag)) {
-    customElements.define(tag, HostClass as unknown as CustomElementConstructor);
+  if (tag in elements && env.isDev) {
+    // todo: 개발 환경에서만 triggerHmrSwap<T>(HostClass)
+  } else if (tag in elements) {
+    throw new Error(`Custom element "${tag}" is already defined.`);
+  } else if (typeof customElements !== 'undefined' && !customElements.get(tag)) {
+    customElements.define(tag, HostClass as unknown as CustomElementConstructor, options);
   }
 
+  elements[tag] = HostClass;
   return HostClass;
 }

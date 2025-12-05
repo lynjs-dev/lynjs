@@ -1,193 +1,119 @@
-import type {
-  ControllerContext,
-  ControllerClass,
-  HostContext,
-  HostClass,
-  AttrPort,
-  EventPort,
-} from './types/element.d.ts';
-import { CONTROLLER, CONNECTED, STATE, HOST } from './symbol.ts';
-import { state, State } from './../state.ts';
-import { DomHost as DomHostBase } from './host/dom-host.ts';
-import { SsrHost as SsrHostBase } from './host/ssr-host.ts';
+import type { ControllerContext, ControllerClass, HostContext, HostClass } from './types/element.d.ts';
+import { DomHost as DomBaseHost } from './host/dom-host.ts';
+import { SsrHost as SsrBaseHost } from './host/ssr-host.ts';
+import type { JSX } from '../../types/jsx.d.ts';
+import { env } from '../env.ts';
+import IterableWeakSet from '../utils/iterable-weak-set.ts';
+import { setControllerHost } from './controller.ts';
 
-export type RuntimeEnvironment = 'dom' | 'ssr' | 'test';
+const kInstances = Symbol('lyn.instances');
 
-export interface StatePolicy {
-  allow?(key: string, value: unknown): boolean;
-  denyKeys?: string[];
-  enforcedAllowlist?: readonly string[];
-}
-
-export interface HostFactoryOptions {
-  env?: RuntimeEnvironment;
-  DomHost?: HostClass;
-  SSRHost?: HostClass;
-  TestHost?: HostClass;
-  statePolicy?: StatePolicy;
-  defaultNotify?: 'defer' | 'immediate' | 'silent';
-}
-
-export interface HostFactory {
-  resolve<T extends ControllerContext = ControllerContext>(
-    Controller: ControllerClass<T>,
-    options: HostFactoryOptions,
-    tag: string,
-  ): HostClass;
-}
-
-export interface DefineElementOptions extends HostFactoryOptions, ElementDefinitionOptions {
-  register?: boolean;
-}
-
-type HmrShadowSet = Set<HostContext>;
-const hmrShadowRegistry: Map<string, HmrShadowSet> = new Map();
-
-function hmrRegister(tag: string, host: HostContext): void {
-  const shadow = hmrShadowRegistry.get(tag) ?? new Set<HostContext>();
-  hmrShadowRegistry.set(tag, shadow);
-  shadow.add(host);
-}
-
-function hmrUnregister(tag: string, host: HostContext): void {
-  hmrShadowRegistry.get(tag)?.delete(host);
-}
-
-export function triggerHmrSwap<T extends ControllerClass = ControllerClass>(tag: string, NewController: T): void {
-  const shadow = hmrShadowRegistry.get(tag);
-  if (!shadow || shadow.size === 0) return;
-  for (const host of shadow) {
-    (host as HostContext).__hmrSwap?.(NewController);
-  }
-}
-
-function createHostClass<T extends ControllerContext>(
-  Base: new () => AttrPort & EventPort,
-  Controller: ControllerClass<T>,
-  _opts: DefineElementOptions | undefined,
-  tag: string,
-): HostClass {
+function createBaseHostClass<T extends ControllerContext>(Base: HostClass): HostClass {
   class BaseHost extends Base implements HostContext {
-    [key: symbol]: unknown;
+    private static [kInstances] = new IterableWeakSet<HostContext>();
 
-    private [CONTROLLER]!: T;
-    private [CONNECTED] = false;
-    private [STATE]!: State;
+    #controller!: T;
+    #connected = false;
+    // #state = new Map<string | symbol, State>();
 
     constructor() {
       super();
-      this[STATE] = state.get(this);
-      this.bindController(Controller);
+
+      this.Class[kInstances].add(this);
+
+      queueMicrotask(() => {
+        this.mountController();
+      });
+    }
+
+    public get Class(): typeof BaseHost {
+      return this.constructor as unknown as typeof BaseHost;
+    }
+
+    public get Controller(): ControllerClass {
+      return this.Class.Controller;
     }
 
     public get controller(): T {
-      return this[CONTROLLER];
+      return this.#controller;
     }
 
     public get isConnected(): boolean {
-      return this[CONNECTED];
+      return this.#connected;
     }
 
-    private bindController(ActiveController: ControllerClass<T>): T {
-      const controller = new ActiveController();
-      (controller as Record<symbol, unknown>)[HOST] = this;
-      this[CONTROLLER] = controller;
-      return controller;
+    private mountController() {
+      const controller = new this.Controller() as T;
+      this.#controller = controller;
+      setControllerHost(controller, this);
+      this.render();
     }
 
-    __hmrSwap(NewController: ControllerClass<T>): void {
-      const oldCtrl = this[CONTROLLER];
+    render(): JSX.Element {
+      return super.render();
+    }
 
-      try {
-        oldCtrl?.disconnectedCallback?.();
-      } catch (e) {
-        console.error(e);
-      }
+    static __hmrSwap(): void {
+      const instances = this[kInstances];
 
-      const next = this.bindController(NewController);
-
-      if (next) {
+      for (const host of instances) {
+        const controller = host.controller;
         try {
-          next.connectedCallback?.();
+          controller?.disconnectedCallback?.();
         } catch (e) {
           console.error(e);
-        } finally {
-          next.render();
+        }
+        if (host.isConnected) {
+          try {
+            controller.connectedCallback?.();
+          } catch (e) {
+            console.error(e);
+          }
         }
       }
     }
 
     connectedCallback(): void {
-      hmrRegister(tag, this);
-      this[CONNECTED] = true;
-      this[CONTROLLER].connectedCallback?.();
-      this[CONTROLLER].render();
+      this.#connected = true;
+      this.#controller.connectedCallback?.();
     }
 
     disconnectedCallback(): void {
-      hmrUnregister(tag, this);
-      this[CONNECTED] = false;
-      this[CONTROLLER]?.disconnectedCallback?.();
+      this.#connected = false;
+      this.#controller.disconnectedCallback?.();
     }
 
     adoptedCallback(): void {
-      this[CONTROLLER]?.adoptedCallback?.();
+      this.#controller.adoptedCallback?.();
     }
 
     attributeChangedCallback(name: string, oldVal: string | null, newVal: string | null): void {
-      this[CONTROLLER]?.attributeChangedCallback?.(name, oldVal, newVal);
+      this.controller.attributeChangedCallback?.(name, oldVal, newVal);
     }
   }
   return BaseHost as unknown as HostClass;
 }
 
-function createDomHostClass<T extends ControllerContext>(
-  Controller: ControllerClass<T>,
-  opts: DefineElementOptions | undefined,
-  tag: string,
-): HostClass {
-  const Base = createHostClass<T>(
-    (opts?.DomHost as unknown as CustomElementConstructor) ?? DomHostBase ?? HTMLElement,
-    Controller,
-    opts,
-    tag,
-  );
-
-  class DomHost extends Base implements HostContext {
-    static get observedAttributes(): string[] {
-      return (Controller.observedAttributes ?? []).slice();
-    }
-  }
-
+function createDomHostClass<T extends ControllerContext>(): HostClass {
+  const Base = createBaseHostClass<T>(DomBaseHost as unknown as HostClass);
+  class DomHost extends Base implements HostContext {}
   return DomHost as unknown as HostClass;
 }
 
-function createSsrHostClass<T extends ControllerContext>(
-  Controller: ControllerClass<T>,
-  opts: DefineElementOptions | undefined,
-  tag: string,
-): HostClass {
-  const Base = createHostClass<T>(SsrHostBase, Controller, opts, tag);
+function createSsrHostClass<T extends ControllerContext>(): HostClass {
+  const Base = createBaseHostClass<T>(SsrBaseHost as unknown as HostClass);
   class SsrHost extends Base implements HostContext {}
   return SsrHost as unknown as HostClass;
 }
 
-export class DefaultHostFactory implements HostFactory {
-  resolve<T extends ControllerContext>(
-    Controller: ControllerClass<T>,
-    options: HostFactoryOptions,
-    tag: string,
-  ): HostClass {
-    const env: RuntimeEnvironment = options.env || 'dom';
-
-    if (env === 'dom') {
-      return createDomHostClass(Controller, options as DefineElementOptions, tag);
-    } else if (env === 'ssr') {
-      return createSsrHostClass(Controller, options as DefineElementOptions, tag);
-    } else {
-      return createSsrHostClass(Controller, options as DefineElementOptions, tag);
-    }
+const BaseHost = (() => {
+  if (env.isBrowser) {
+    return createDomHostClass();
+  } else if (env.isNode) {
+    return createSsrHostClass();
+  } else {
+    return createSsrHostClass();
   }
-}
+})();
 
-export const hostFactory = new DefaultHostFactory();
+export { BaseHost };

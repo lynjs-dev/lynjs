@@ -1,45 +1,59 @@
 import { JSX } from '../../types/jsx.js';
-import { HOST } from './symbol.ts';
-import type { ControllerContext, HostContext } from './types/element.d.ts';
+import type { ControllerClass, ControllerContext, HostContext } from './types/element.d.ts';
+
+// Private symbol for host binding (not exported)
+const kBindHost = Symbol('lyn.bindHost');
+
+// Shouldn't be exposed outside lynjs
+export function setControllerHost(controller: ControllerContext, host: HostContext): void {
+  // Bind host via private symbol-only API; prevents external assignment.
+  (controller as unknown as Record<symbol, (host: HostContext) => void>)[kBindHost](host);
+}
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
 export class Controller implements ControllerContext {
-  static readonly useShadow = true as const;
+  static readonly isShadow = true as const;
 
-  private [HOST]!: HostContext;
+  #host!: HostContext | null;
 
-  constructor() {}
-
-  public get hostNode(): HostContext {
-    return this[HOST];
+  constructor() {
+    this[kBindHost](null);
   }
 
-  public set hostNode(value: HostContext) {
-    // Allow binding only once during createController()
-    if (this[HOST] !== undefined) {
-      throw new Error('Controller.hostNode can only be assigned during controller creation.');
+  public get controller(): ControllerClass {
+    return this;
+  }
+
+  public get host(): HostContext | null {
+    return this.#host;
+  }
+
+  // One-time internal host binding. Not accessible outside this module.
+  private [kBindHost](value: HostContext | null): void {
+    if (this.#host) {
+      throw new Error('Controller.host can only be assigned during controller creation.');
     }
-    this[HOST] = value;
+    this.#host = value;
   }
 
   get isConnected(): boolean {
-    return this.hostNode.isConnected;
+    return this.host?.isConnected ?? false;
   }
 
-  getAttribute(name: string) {
-    return this.hostNode.getAttribute(name);
+  getAttribute(name: string): string | null {
+    return this.host?.getAttribute(name) ?? null;
   }
 
   setAttribute(name: string, value: string): void {
-    this.hostNode.setAttribute(name, value);
+    this.host?.setAttribute(name, value);
   }
 
   removeAttribute(name: string): void {
-    this.hostNode.removeAttribute(name);
+    this.host?.removeAttribute(name);
   }
 
   hasAttribute(name: string): boolean {
-    return this.hostNode.hasAttribute(name);
+    return this.host?.hasAttribute(name) ?? false;
   }
 
   addEventListener(
@@ -47,11 +61,11 @@ export class Controller implements ControllerContext {
     listener: EventListenerOrEventListenerObject,
     options?: boolean | AddEventListenerOptions,
   ): void {
-    this.hostNode.addEventListener(type, listener, options);
+    this.host?.addEventListener(type, listener, options);
   }
 
   dispatchEvent(event: Event): boolean {
-    return this.hostNode.dispatchEvent(event);
+    return this.host?.dispatchEvent(event) ?? false;
   }
 
   removeEventListener(
@@ -59,11 +73,11 @@ export class Controller implements ControllerContext {
     listener: EventListenerOrEventListenerObject,
     options?: boolean | EventListenerOptions,
   ): void {
-    this.hostNode.removeEventListener(type, listener, options);
+    this?.host?.removeEventListener(type, listener, options);
   }
 
-  queueMicrotask(cb: () => void): void {
-    queueMicrotask(cb);
+  queueMicrotask(callback: () => void): void {
+    queueMicrotask(callback);
   }
 
   setInterval(handler: TimerHandler, timeout?: number, ...args: unknown[]): number {
@@ -120,7 +134,7 @@ for (const name of methodNames) {
   if (name in Controller.prototype) continue;
   Object.defineProperty(Controller.prototype, name, {
     value: function (...args: unknown[]): unknown {
-      const node = this.hostNode;
+      const node = this.host;
       return node[name](...args);
     },
     writable: true,
@@ -133,18 +147,16 @@ for (const name of propertyNames) {
 
   Object.defineProperty(Controller.prototype, name, {
     get: function (): unknown {
-      const host = this[HOST];
-      return host[name];
+      return this.host[name];
     },
     set: function (value: unknown): void {
-      const host = this[HOST];
-      host[name] = value;
+      this.host[name] = value;
     },
     configurable: true,
   });
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
-export interface Controller extends HTMLElement, ControllerContext {
+export interface Controller extends HTMLElement, ControllerClass {
   render(): JSX.Element;
 }
