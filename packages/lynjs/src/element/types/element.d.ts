@@ -1,4 +1,5 @@
 import type { JSX } from '../../../types/jsx.d.ts';
+import type { Class } from '../../../types/class.d.ts';
 
 export type PersistedState = Record<string | symbol, unknown>;
 
@@ -53,7 +54,7 @@ export interface HydrationPort {
 export interface HostContext extends ElementLifecycle, AttrPort, EventTarget, RenderPort {
   readonly hydrate?: HydrationPort;
   readonly controller: ControllerContext;
-
+  instanceof(ControllerClass: Class): boolean;
   __hmrSwap(NewController: ControllerClass): void;
 }
 
@@ -67,10 +68,11 @@ export type HostClass<T extends HostContext = HostContext> = (new () => T) & Hos
 // ControllerContext 의 render 는 Host에서만 호출되어야 한다.
 export interface ControllerContext extends ElementLifecycle, AttrPort, EventTarget, SchedulerPort, RenderPort {
   readonly host: HostContext | null;
+  instanceof(ControllerClass: Class): boolean;
 }
 
 export interface ControllerClassStatic {
-  isShadow: boolean;
+  readonly isShadow: boolean;
   observedAttributes?: string[];
   stateVersion?: number;
   persistedKeys?: readonly string[];

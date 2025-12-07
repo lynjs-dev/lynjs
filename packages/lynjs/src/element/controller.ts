@@ -1,14 +1,7 @@
 import { JSX } from '../../types/jsx.js';
 import type { ControllerClass, ControllerContext, HostContext } from './types/element.d.ts';
-
-// Private symbol for host binding (not exported)
-const kBindHost = Symbol('lyn.bindHost');
-
-// Shouldn't be exposed outside lynjs
-export function setControllerHost(controller: ControllerContext, host: HostContext): void {
-  // Bind host via private symbol-only API; prevents external assignment.
-  (controller as unknown as Record<symbol, (host: HostContext) => void>)[kBindHost](host);
-}
+import type { Class } from '../../types/class.d.ts';
+import { kBindHost, definePrototypeDelegates } from './utils/element.ts';
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
 export class Controller implements ControllerContext {
@@ -20,6 +13,8 @@ export class Controller implements ControllerContext {
     this[kBindHost](null);
   }
 
+  protected initialize() {}
+
   public get controller(): ControllerClass {
     return this;
   }
@@ -28,16 +23,21 @@ export class Controller implements ControllerContext {
     return this.#host;
   }
 
-  // One-time internal host binding. Not accessible outside this module.
-  private [kBindHost](value: HostContext | null): void {
+  // One-time internal host binding.
+  private [kBindHost](host: HostContext | null): void {
     if (this.#host) {
       throw new Error('Controller.host can only be assigned during controller creation.');
     }
-    this.#host = value;
+    this.#host = host;
+    if (host) this.initialize();
   }
 
   get isConnected(): boolean {
     return this.host?.isConnected ?? false;
+  }
+
+  instanceof(cls: Class): boolean {
+    return this instanceof cls;
   }
 
   getAttribute(name: string): string | null {
@@ -110,51 +110,10 @@ export class Controller implements ControllerContext {
   }
 }
 
-const hostProtos = [HTMLElement.prototype];
-
-const methodNames = new Set<string>();
-const propertyNames = new Set<string>();
-
-for (const proto of hostProtos) {
-  for (const key of Object.getOwnPropertyNames(proto)) {
-    const desc = Object.getOwnPropertyDescriptor(proto, key);
-    if (!desc) continue;
-
-    if (typeof desc.value === 'function') {
-      methodNames.add(key);
-    } else {
-      if (typeof desc.get === 'function' || typeof desc.set === 'function') {
-        propertyNames.add(key);
-      }
-    }
-  }
-}
-
-for (const name of methodNames) {
-  if (name in Controller.prototype) continue;
-  Object.defineProperty(Controller.prototype, name, {
-    value: function (...args: unknown[]): unknown {
-      const node = this.host;
-      return node[name](...args);
-    },
-    writable: true,
-    configurable: true,
-  });
-}
-
-for (const name of propertyNames) {
-  if (name in Controller.prototype) continue;
-
-  Object.defineProperty(Controller.prototype, name, {
-    get: function (): unknown {
-      return this.host[name];
-    },
-    set: function (value: unknown): void {
-      this.host[name] = value;
-    },
-    configurable: true,
-  });
-}
+// Forward HTMLElement methods and accessors onto Controller instances via `host`.
+definePrototypeDelegates<Controller>(Controller, HTMLElement, (self) => {
+  return self.host;
+});
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
 export interface Controller extends HTMLElement, ControllerClass {

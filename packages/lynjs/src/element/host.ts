@@ -1,10 +1,12 @@
-import type { ControllerContext, ControllerClass, HostContext, HostClass } from './types/element.d.ts';
-import { DomHost as DomBaseHost } from './host/dom-host.ts';
-import { SsrHost as SsrBaseHost } from './host/ssr-host.ts';
 import type { JSX } from '../../types/jsx.d.ts';
+import type { ControllerContext, ControllerClass, HostContext, HostClass } from './types/element.d.ts';
+import type { Class } from '../../types/class.d.ts';
 import { env } from '../env.ts';
 import IterableWeakSet from '../utils/iterable-weak-set.ts';
-import { setControllerHost } from './controller.ts';
+
+import { defineInstanceDelegates, setControllerHost } from './utils/element.ts';
+import { DomHost as DomBaseHost } from './host/dom-host.ts';
+import { SsrHost as SsrBaseHost } from './host/ssr-host.ts';
 
 const kInstances = Symbol('lyn.instances');
 
@@ -44,13 +46,10 @@ function createBaseHostClass<T extends ControllerContext>(Base: HostClass): Host
 
     private mountController() {
       const controller = new this.Controller() as T;
-      this.#controller = controller;
+      defineInstanceDelegates(controller, this);
       setControllerHost(controller, this);
+      this.#controller = controller;
       this.render();
-    }
-
-    render(): JSX.Element {
-      return super.render();
     }
 
     static __hmrSwap(): void {
@@ -73,6 +72,14 @@ function createBaseHostClass<T extends ControllerContext>(Base: HostClass): Host
       }
     }
 
+    render(): JSX.Element {
+      return super.render();
+    }
+
+    instanceof(cls: Class): boolean {
+      return this.controller instanceof cls;
+    }
+
     connectedCallback(): void {
       this.#connected = true;
       this.#controller.connectedCallback?.();
@@ -91,6 +98,7 @@ function createBaseHostClass<T extends ControllerContext>(Base: HostClass): Host
       this.controller.attributeChangedCallback?.(name, oldVal, newVal);
     }
   }
+
   return BaseHost as unknown as HostClass;
 }
 

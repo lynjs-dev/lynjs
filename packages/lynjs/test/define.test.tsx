@@ -20,6 +20,9 @@ describe('LynElement - define', async () => {
     await Promise.resolve();
     expect(el).toBeInstanceOf(HTMLElement);
     expect(el.controller).toBeInstanceOf(Controller);
+    expect(el.instanceof(XTestEl)).toEqual(true);
+    expect(el.constructor.name).toEqual('XTestEl');
+    console.log(el.outerHTML);
   });
 
   it('should render the content inside shadowRoot', async () => {
