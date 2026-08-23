@@ -1,9 +1,11 @@
 {
   "compilerOptions": {
     "target": "ES2022",
-    "module": "ESNext",
-    "moduleResolution": "NodeNext",
-    "lib": ["ES2022", "DOM"],
+    "lib": ["ES2022", "DOM", "ESNext.Decorators"],
+
+    "module": "Preserve",
+    "moduleResolution": "Bundler",
+    "verbatimModuleSyntax": true,
 
     "jsx": "preserve",
 
@@ -11,12 +13,12 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
 
-    "allowJs": true,
-    "checkJs": false,
+    "isolatedModules": true,
+    "noUncheckedSideEffectImports": true,
 
     "resolveJsonModule": true,
-    "esModuleInterop": true,
 
     "noEmit": true
-  }
+  },
+  "include": ["src"]
 }

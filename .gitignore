@@ -58,5 +58,5 @@ pnpm-lock.yaml
 .parcel-cache/
 
 # Only ignore npm pack tarballs at repo root
-/lynjs-*.tgz
+lynjs-*.tgz
 
