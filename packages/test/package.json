@@ -7,7 +7,7 @@
   "scripts": {
     "test": "npm run build --workspace=@lynjs/core && npm run test:run",
     "test:run": "vitest run",
-    "test:watch": "npm run build --workspace=@lynjs/core && concurrently --kill-others --names core,test \"npm run build --workspace=@lynjs/core -- --watch\" \"vitest\""
+    "test:watch": "npm run build --workspace=@lynjs/core && concurrently --kill-others-on-fail --names core,test \"npm run build --workspace=@lynjs/core -- --watch\" \"vitest --watch\""
   },
   "dependencies": {
     "@lynjs/core": "0.0.0"
