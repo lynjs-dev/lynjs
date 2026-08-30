@@ -1,3 +1,1 @@
-export default function hello() {
-  return 'hello world';
-}
+export * from './element';

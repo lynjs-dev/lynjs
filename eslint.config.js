@@ -1,4 +1,3 @@
-import { cwd } from 'node:process';
 import js from '@eslint/js';
 import ts from 'typescript-eslint';
 import prettier from 'eslint-config-prettier';
@@ -21,6 +20,7 @@ export default [
       '**/dist/**',
       '**/coverage/**',
       '**/*.d.ts',
+      '**/tmp/**',
       // 설정 파일 전역 무시(원하면 유지)
       // '**/*.config.js',
       // '**/*.config.cjs',
@@ -39,20 +39,6 @@ export default [
 
       // Allow "any" but show as a warning
       '@typescript-eslint/no-explicit-any': 'warn',
-    },
-  },
-
-  {
-    files: ['{src,packages/*}/**/*.{ts,tsx}'],
-    languageOptions: {
-      parser: ts.parser,
-      parserOptions: {
-        project: [
-          './tsconfig.json', // 루트
-          './packages/*/tsconfig.json', // 모든 패키지
-        ],
-        tsconfigRootDir: cwd(),
-      },
     },
   },
 

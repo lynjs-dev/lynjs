@@ -60,3 +60,6 @@ pnpm-lock.yaml
 # Only ignore npm pack tarballs at repo root
 lynjs-*.tgz
 
+# Test screenshots
+**/__screenshots__/
+**/.vitest-attachments/

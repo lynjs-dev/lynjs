@@ -5,12 +5,16 @@
   "type": "module",
   "description": "",
   "scripts": {
-    "pretest": "npm run build --workspace=@lynjs/core && npm run build",
-    "build": "tsc -p tsconfig.json",
-    "test": "npm run build --workspace=@lynjs/core && npm run build && npm run test:run",
-    "test:run": "node dist/index.js"
+    "test": "npm run build --workspace=@lynjs/core && npm run test:run",
+    "test:run": "vitest run",
+    "test:watch": "npm run build --workspace=@lynjs/core && concurrently --kill-others --names core,test \"npm run build --workspace=@lynjs/core -- --watch\" \"vitest\""
   },
   "dependencies": {
-    "@lynjs/core": "latest"
+    "@lynjs/core": "0.0.0"
+  },
+  "devDependencies": {
+    "@vitest/browser-playwright": "^4.1.11",
+    "playwright": "^1.62.1",
+    "vitest": "^4.1.11"
   }
 }
