@@ -10,6 +10,7 @@
   ],
   "sideEffects": false,
   "scripts": {
+    "test": "npm run build --workspace=@lynjs/core && npm run build --workspace=@lynjs/test && npm run test:run --workspace=@lynjs/test",
     "__comment_publish__": "",
     "verify:pack": "npm pack --dry-run",
     "prepublishOnly": "npm run verify:pack",
