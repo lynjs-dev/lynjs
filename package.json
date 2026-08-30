@@ -18,7 +18,7 @@
     "__comment_eslint__": "",
     "lint": "eslint --ext .ts,.tsx,.js,.cjs --report-unused-disable-directives --cache",
     "lint:all": "eslint . --ext .ts,.tsx,.js,.cjs --report-unused-disable-directives --cache",
-    "lint:fix": "npm run lint -- --fix --max-warnings=0",
+    "lint:fix": "npm run lint -- --fix --max-warnings=0 --no-warn-ignored",
     "format": "prettier . --check --cache",
     "format:fix": "prettier . --write --cache",
     "lint:ws": "npm run lint -ws --if-present",

@@ -14,6 +14,12 @@ export default [
   prettier,
 
   {
+    linterOptions: {
+      reportUnusedDisableDirectives: 'error',
+    },
+  },
+
+  {
     // Common ignore settings
     ignores: [
       '**/node_modules/**',

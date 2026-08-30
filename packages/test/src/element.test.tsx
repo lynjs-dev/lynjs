@@ -3,10 +3,7 @@ import { LynElement } from '@lynjs/core';
 
 class TestElement extends LynElement {
   protected render(): Node {
-    const span = document.createElement('span');
-    span.textContent = 'hello LynElement';
-
-    return span;
+    return <span>hello LynElement</span>;
   }
 }
 

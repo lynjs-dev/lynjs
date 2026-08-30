@@ -10,11 +10,16 @@
     "test:watch": "npm run build --workspace=@lynjs/core && concurrently --kill-others-on-fail --names core,test \"npm run build --workspace=@lynjs/core -- --watch\" \"vitest --watch\""
   },
   "dependencies": {
-    "@lynjs/core": "0.0.0"
+    "@lynjs/core": "0.0.0",
+    "dom-expressions": "^0.40.10"
   },
   "devDependencies": {
+    "@babel/core": "^7.29.7",
+    "@babel/preset-typescript": "^7.29.7",
     "@vitest/browser-playwright": "^4.1.11",
+    "babel-plugin-jsx-dom-expressions": "^0.40.10",
     "playwright": "^1.62.1",
+    "vite-plugin-babel": "^1.7.3",
     "vitest": "^4.1.11"
   }
 }
