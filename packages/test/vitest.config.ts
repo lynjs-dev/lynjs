@@ -16,6 +16,9 @@ export default defineConfig({
       include: /\.tsx(?:$|\?)/,
       exclude: /node_modules/,
       babelConfig: {
+        sourceMaps: true,
+        retainLines: true,
+
         presets: [
           [
             '@babel/preset-typescript',
