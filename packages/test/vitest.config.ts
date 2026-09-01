@@ -1,13 +1,14 @@
-import { fileURLToPath, URL } from 'node:url';
-
 import { playwright } from '@vitest/browser-playwright';
 import babel from 'vite-plugin-babel';
 import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
+  optimizeDeps: {
+    exclude: ['dom-expressions', '@lynjs/core', '@lynjs/core/jsx-runtime', '@lynjs/core/rxcore'],
+  },
   resolve: {
     alias: {
-      rxcore: fileURLToPath(new URL('./src/rxcore.ts', import.meta.url)),
+      rxcore: '@lynjs/core/rxcore',
     },
   },
 
@@ -32,7 +33,7 @@ export default defineConfig({
           [
             'babel-plugin-jsx-dom-expressions',
             {
-              moduleName: 'dom-expressions/src/client.js',
+              moduleName: '@lynjs/core/jsx-runtime',
               generate: 'dom',
               delegateEvents: false,
             },

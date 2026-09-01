@@ -1,13 +1,23 @@
+import { render as renderDOM } from './jsx-runtime';
+
 export type Element = HTMLElement | SVGElement;
 
 export class LynElement extends HTMLElement {
+  private disposeRender?: () => void;
+
   constructor() {
     super();
   }
 
   connectedCallback() {
-    const child = this.render();
-    this.appendChild(child);
+    if (this.disposeRender) return;
+    const element = this.render();
+    this.disposeRender = renderDOM(() => element, this);
+  }
+
+  disconnectedCallback() {
+    this.disposeRender?.();
+    this.disposeRender = undefined;
   }
 
   protected render(): Node {

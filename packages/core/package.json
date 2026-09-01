@@ -10,6 +10,17 @@
     ".": {
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
+    },
+    "./jsx-runtime": {
+      "types": "./dist/jsx-runtime.d.ts",
+      "default": "./dist/jsx-runtime.js"
+    },
+    "./rxcore": {
+      "types": "./dist/rxcore.d.ts",
+      "default": "./dist/rxcore.js"
     }
+  },
+  "dependencies": {
+    "dom-expressions": "^0.40.10"
   }
 }

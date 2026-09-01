@@ -1,6 +1,7 @@
 export const sharedConfig: Record<string, unknown> = {};
 
 export function root<T>(fn: (dispose: () => void) => T): T {
+  console.log('root');
   return fn(() => {});
 }
 

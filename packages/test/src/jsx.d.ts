@@ -1,4 +1,4 @@
-import type { JSX as DOMExpressionsJSX } from 'dom-expressions/src/jsx';
+import type { JSX as DOMExpressionsJSX } from '@lynjs/core/jsx-runtime';
 
 declare global {
   namespace JSX {

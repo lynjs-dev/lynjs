@@ -10,8 +10,7 @@
     "test:watch": "npm run build --workspace=@lynjs/core && concurrently --kill-others-on-fail --names core,test \"npm run build --workspace=@lynjs/core -- --watch\" \"vitest --watch\""
   },
   "dependencies": {
-    "@lynjs/core": "0.0.0",
-    "dom-expressions": "^0.40.10"
+    "@lynjs/core": "0.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.29.7",
