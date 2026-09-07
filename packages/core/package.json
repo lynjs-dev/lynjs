@@ -16,8 +16,8 @@
       "default": "./dist/jsx-runtime.js"
     },
     "./rxcore": {
-      "types": "./dist/rxcore.d.ts",
-      "default": "./dist/rxcore.js"
+      "types": "./dist/reactive/index.d.ts",
+      "default": "./dist/reactive/index.js"
     }
   },
   "dependencies": {

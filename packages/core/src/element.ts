@@ -11,8 +11,7 @@ export class LynElement extends HTMLElement {
 
   connectedCallback() {
     if (this.disposeRender) return;
-    const element = this.render();
-    this.disposeRender = renderDOM(() => element, this);
+    this.disposeRender = renderDOM(() => this.render(), this);
   }
 
   disconnectedCallback() {
