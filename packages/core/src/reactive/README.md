@@ -17,17 +17,24 @@ reactive/
 ├── signal.ts             # Signal 값과 구독자 관리
 ├── reactive-effect.ts    # Effect 실행, 의존성 및 cleanup 관리
 ├── reactive-context.ts   # 현재 Effect와 Scope 실행 컨텍스트
-└── reactive-scope.ts     # Owner 계층과 생명주기 관리
+├── reactive-scope.ts     # Owner 계층과 생명주기 관리
+└── README.md             # 설계, 사용법과 현재 제한 사항
 ```
 
 ## 실행 흐름
 
 ```text
-root()
-└── ReactiveScope 생성
-    └── effect 실행
-        └── Signal.value 읽기
-            └── Signal과 Effect 의존성 연결
+root(owner 없음)
+└── ReactiveScope 생성 및 연결
+    └── callback 실행
+
+root(owner 전달)
+└── 기존 ReactiveScope 재사용
+    └── callback 실행
+
+effect 실행
+└── Signal.value 읽기
+    └── Signal과 Effect 의존성 연결
 
 Signal.value 변경
 └── Object.is()로 값 변경 확인
@@ -78,6 +85,9 @@ count.value = 1; // Effect 재실행
 count.value = 1; // 같은 값이므로 재실행하지 않음
 ```
 
+Signal과 Effect는 구독 관계를 양쪽에 기록한다. Signal은 값 변경 시 실행할 Effect를 찾기 위해 구독자를
+보관하고, Effect는 재실행이나 연결 해제 시 자신을 제거할 Signal 목록을 보관한다.
+
 ## ReactiveEffect
 
 `ReactiveEffect`는 반응형 함수를 실행하고 다음 정보를 관리한다.
@@ -86,7 +96,7 @@ count.value = 1; // 같은 값이므로 재실행하지 않음
 - `onCleanup()`으로 등록한 정리 함수
 - 소속 ReactiveScope
 - 이전 실행의 반환값
-- 실행 및 dispose 상태
+- 실행, pause 및 dispose 상태
 
 Effect를 다시 실행하기 전에 이전 cleanup과 Signal 구독을 제거하고 의존성을 새로 수집한다.
 따라서 조건에 따라 읽는 Signal이 바뀌어도 더 이상 사용하지 않는 Signal에는 구독이 남지 않는다.
@@ -150,7 +160,7 @@ effect((previous) => {
 ## Cleanup
 
 `onCleanup()`은 현재 실행 중인 Effect에 정리 함수를 등록한다.
-정리 함수는 Effect가 다시 실행되기 전과 Effect가 dispose될 때 실행된다.
+정리 함수는 Effect가 다시 실행되기 전, 일시 정지될 때와 Effect가 dispose될 때 실행된다.
 
 ```ts
 const interval = signal(1000);
@@ -173,6 +183,10 @@ callback에 전달되는 disposer를 호출하면 Scope에 속한 Effect, 자식
 
 기존 Owner가 전달되면 새 Scope를 만들지 않고 해당 Owner에서 callback을 실행한다.
 이 경우 Owner의 연결과 해제는 Owner를 생성한 대상이 관리한다.
+
+Owner가 전달된 경우 callback의 disposer는 해당 Owner를 영구적으로 `stop()`한다. LynElement는 DOM에서 잠시
+분리된 뒤 재연결될 수 있으므로 render disposer를 호출하지 않고 Owner의 `disconnect()`와 `connect()`를
+사용한다.
 
 ```ts
 let dispose = () => {};
@@ -222,6 +236,23 @@ root((dispose) => {
 Owner 없이 호출한 `root()`는 callback 실행이 끝난 뒤 새 Scope를 연결한다. callback 실행 중 오류가 발생하면
 생성된 Scope를 정리한 다음 오류를 다시 전달한다. Owner를 전달한 경우에는 기존 Owner를 그대로 사용한다.
 
+## 공개 API
+
+| API                               | 역할                                           |
+| --------------------------------- | ---------------------------------------------- |
+| `signal()` / `Signal`             | 반응형 값 생성 및 관리                         |
+| `createEffect()`                  | Effect 생성 후 독립 disposer 반환              |
+| `effect()`                        | `dom-expressions` 호환 Effect 실행             |
+| `onCleanup()`                     | 현재 Effect의 cleanup 등록                     |
+| `root()`                          | 새 Scope 생성 또는 전달받은 Owner 재사용       |
+| `createScope()` / `ReactiveScope` | 명시적인 Owner Scope 생성 및 관리              |
+| `getOwner()`                      | 현재 동기 실행 컨텍스트의 Scope 조회           |
+| `connected()`                     | Scope 연결 및 해제 생명주기 callback 등록      |
+| `untrack()`                       | Signal 읽기를 현재 Effect 의존성에서 제외      |
+| `memo()`                          | 현재는 accessor를 그대로 반환하는 호환 구현    |
+| `createComponent()`               | 현재는 컴포넌트 함수 직접 실행                 |
+| `mergeProps()`                    | 현재는 `Object.assign()` 기반의 일반 객체 병합 |
+
 ## untrack
 
 `untrack()` 안에서 읽은 Signal은 현재 Effect의 의존성으로 등록되지 않는다.
@@ -264,6 +295,7 @@ LynElement.disconnectedCallback()
 
 `disconnectedCallback()`에서는 root disposer나 `ReactiveScope.stop()`을 호출하지 않는다. DOM에서 분리되어도
 LynElement 인스턴스는 다시 연결될 수 있기 때문이다. Scope의 영구 폐기와 일시적인 연결 해제를 구분한다.
+분리된 동안 Signal이 변경되면 DOM은 갱신되지 않으며, 재연결 시 Effect가 다시 실행되어 최신 값을 반영한다.
 
 ## 현재 제한 사항
 
@@ -273,3 +305,4 @@ LynElement 인스턴스는 다시 연결될 수 있기 때문이다. Scope의 �
 - `mergeProps()`는 단순한 객체 병합이며 반응형 속성 병합은 아직 지원하지 않는다.
 - 비동기 callback은 실행 컨텍스트를 자동으로 유지하지 않는다.
 - 오류 경계와 순환 업데이트 감지는 아직 제공하지 않는다.
+- LynElement는 재연결을 위해 Scope를 보존하며 명시적인 영구 폐기 API는 아직 제공하지 않는다.
