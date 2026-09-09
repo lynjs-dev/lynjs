@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { connected, createEffect, effect, onCleanup, root, signal } from '@lynjs/core/rxcore';
+import { connected, createEffect, effect, getOwner, onCleanup, ReactiveScope, root, signal } from '@lynjs/core/rxcore';
 
 describe('signal', () => {
   it('effect가 읽은 Signal이 변경되면 effect를 다시 실행한다', () => {
@@ -92,5 +92,18 @@ describe('signal', () => {
     dispose();
 
     expect(onDisconnect).toHaveBeenCalledOnce();
+  });
+
+  it('owner가 전달되면 새로운 Scope를 만들지 않고 기존 Scope를 사용한다', () => {
+    const owner = new ReactiveScope();
+    let activeOwner: ReactiveScope | undefined;
+
+    owner.connect();
+    root(() => {
+      activeOwner = getOwner();
+    }, owner);
+
+    expect(activeOwner).toBe(owner);
+    expect(owner.children.size).toBe(0);
   });
 });

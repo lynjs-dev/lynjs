@@ -1,22 +1,33 @@
 import { render as renderDOM } from './jsx-runtime';
+import { ReactiveScope } from './reactive';
 
 export type Element = HTMLElement | SVGElement;
 
 export class LynElement extends HTMLElement {
-  private disposeRender?: () => void;
+  private readonly reactiveScope = new ReactiveScope();
+  private rendered = false;
 
   constructor() {
     super();
   }
 
   connectedCallback() {
-    if (this.disposeRender) return;
-    this.disposeRender = renderDOM(() => this.render(), this);
+    this.reactiveScope.connect();
+    if (this.rendered) return;
+
+    const owner = this.reactiveScope;
+
+    try {
+      renderDOM(() => this.render(), this, undefined, { owner });
+      this.rendered = true;
+    } catch (error) {
+      owner.disconnect();
+      throw error;
+    }
   }
 
   disconnectedCallback() {
-    this.disposeRender?.();
-    this.disposeRender = undefined;
+    this.reactiveScope.disconnect();
   }
 
   protected render(): Node {

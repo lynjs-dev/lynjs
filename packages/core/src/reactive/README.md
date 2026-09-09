@@ -36,6 +36,15 @@ Signal.value 변경
         ├── 이전 Signal 구독 해제
         └── 새 의존성 수집
 
+ReactiveScope.disconnect()
+└── Effect 일시 정지
+    ├── cleanup 실행
+    └── Signal 구독 해제
+
+ReactiveScope.connect()
+└── 정지된 Effect 재실행
+    └── 최신 값 반영 및 Signal 재구독
+
 root disposer 실행
 └── ReactiveScope.stop()
     ├── 자식 Scope 정리
@@ -159,8 +168,11 @@ createEffect(() => {
 
 ## ReactiveScope와 root
 
-`root()`는 ReactiveScope를 생성하고 callback을 해당 Scope 안에서 실행한다.
+`root()`는 Owner가 전달되지 않으면 ReactiveScope를 생성하고 callback을 해당 Scope 안에서 실행한다.
 callback에 전달되는 disposer를 호출하면 Scope에 속한 Effect, 자식 Scope와 정리 작업이 모두 해제된다.
+
+기존 Owner가 전달되면 새 Scope를 만들지 않고 해당 Owner에서 callback을 실행한다.
+이 경우 Owner의 연결과 해제는 Owner를 생성한 대상이 관리한다.
 
 ```ts
 let dispose = () => {};
@@ -176,7 +188,7 @@ root((rootDispose) => {
 dispose();
 ```
 
-Scope 안에서 다시 `root()` 또는 `createScope()`를 사용하면 부모·자식 관계가 만들어진다.
+Owner를 전달하지 않고 Scope 안에서 다시 `root()` 또는 `createScope()`를 사용하면 부모·자식 관계가 만들어진다.
 부모 Scope를 정리하면 모든 자식 Scope도 함께 정리된다.
 
 `getOwner()`는 현재 실행 중인 ReactiveScope를 반환한다.
@@ -207,8 +219,8 @@ root((dispose) => {
 });
 ```
 
-`root()`는 callback 실행이 끝난 뒤 Scope를 연결한다. callback 실행 중 오류가 발생하면 생성된 Scope를
-정리한 다음 오류를 다시 전달한다.
+Owner 없이 호출한 `root()`는 callback 실행이 끝난 뒤 새 Scope를 연결한다. callback 실행 중 오류가 발생하면
+생성된 Scope를 정리한 다음 오류를 다시 전달한다. Owner를 전달한 경우에는 기존 Owner를 그대로 사용한다.
 
 ## untrack
 
@@ -229,20 +241,29 @@ ignored.value = 1; // Effect를 재실행하지 않음
 
 ## LynElement와 dom-expressions
 
-`LynElement.connectedCallback()`은 `dom-expressions`의 `render()`를 호출한다.
-`render()`는 내부적으로 `root()`를 실행하므로 JSX 렌더링 중 생성된 Effect가 하나의 ReactiveScope에 등록된다.
+`LynElement`는 인스턴스마다 ReactiveScope를 한 번 생성하고 연결과 해제 과정에서 재사용한다.
+최초 `connectedCallback()`은 `dom-expressions`의 `render()`를 호출하고, 이후 재연결에서는 기존 DOM과 Scope를
+재사용한다. `render()` 내부의 `root()`도 전달받은 LynElement Owner Scope를 그대로 사용한다.
 
 ```text
-LynElement.connectedCallback()
+최초 connectedCallback()
+├── Owner Scope connect()
 └── dom-expressions.render()
-    └── root()
-        └── this.render()
+    └── 같은 Owner Scope에서 root() 실행
+        └── this.render() 1회 실행
 
 LynElement.disconnectedCallback()
-└── render disposer
-    └── root disposer
-        └── ReactiveScope.stop()
+└── Owner Scope disconnect()
+    └── Effect cleanup 및 Signal 구독 해제
+
+재연결 connectedCallback()
+└── 같은 Owner Scope connect()
+    ├── 기존 Effect 재실행 및 Signal 재구독
+    └── 기존 DOM 재사용
 ```
+
+`disconnectedCallback()`에서는 root disposer나 `ReactiveScope.stop()`을 호출하지 않는다. DOM에서 분리되어도
+LynElement 인스턴스는 다시 연결될 수 있기 때문이다. Scope의 영구 폐기와 일시적인 연결 해제를 구분한다.
 
 ## 현재 제한 사항
 
