@@ -5,15 +5,32 @@
   "license": "BSD-3-Clause",
   "type": "module",
   "files": [
+    "dist",
     "README.md",
     "LICENSE"
   ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./jsx-runtime": {
+      "types": "./dist/jsx-runtime.d.ts",
+      "default": "./dist/jsx-runtime.js"
+    },
+    "./rxcore": {
+      "types": "./dist/reactive/index.d.ts",
+      "default": "./dist/reactive/index.js"
+    }
+  },
   "sideEffects": false,
   "scripts": {
+    "build": "tsc -p packages/core/tsconfig.json",
     "test": "npm test --workspace=@lynjs/test",
     "test:watch": "npm run test:watch --workspace=@lynjs/test",
     "__comment_publish__": "",
     "verify:pack": "npm pack --dry-run",
+    "prepack": "npm run build",
     "prepublishOnly": "npm run verify:pack",
     "__comment_eslint__": "",
     "lint": "eslint --ext .ts,.tsx,.js,.cjs --report-unused-disable-directives --cache",
@@ -34,6 +51,9 @@
   "workspaces": [
     "packages/*"
   ],
+  "dependencies": {
+    "dom-expressions": "^0.40.10"
+  },
   "devDependencies": {
     "@commitlint/cli": "^21.2.2",
     "@commitlint/config-conventional": "^21.2.2",

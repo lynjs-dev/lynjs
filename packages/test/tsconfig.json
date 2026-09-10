@@ -1,10 +1,13 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "noEmit": false,
-    "outDir": "./dist",
-    "rootDir": "./src",
-    "jsx": "preserve"
+    "noEmit": true,
+    "jsx": "preserve",
+    "paths": {
+      "@lynjs/core": ["../core/src/index.ts"],
+      "@lynjs/core/jsx-runtime": ["../core/src/jsx-runtime.ts"],
+      "@lynjs/core/rxcore": ["../core/src/reactive/index.ts"]
+    }
   },
   "include": ["src/**/*.ts", "src/**/*.tsx"],
   "exclude": ["dist", "node_modules"]

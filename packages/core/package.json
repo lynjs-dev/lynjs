@@ -2,25 +2,5 @@
   "name": "@lynjs/core",
   "version": "0.0.0",
   "private": true,
-  "type": "module",
-  "scripts": {
-    "build": "tsc -p tsconfig.json"
-  },
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "default": "./dist/index.js"
-    },
-    "./jsx-runtime": {
-      "types": "./dist/jsx-runtime.d.ts",
-      "default": "./dist/jsx-runtime.js"
-    },
-    "./rxcore": {
-      "types": "./dist/reactive/index.d.ts",
-      "default": "./dist/reactive/index.js"
-    }
-  },
-  "dependencies": {
-    "dom-expressions": "^0.40.10"
-  }
+  "type": "module"
 }

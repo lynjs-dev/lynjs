@@ -1,3 +1,5 @@
+import { fileURLToPath, URL } from 'node:url';
+
 import { playwright } from '@vitest/browser-playwright';
 import babel from 'vite-plugin-babel';
 import { defineConfig } from 'vitest/config';
@@ -7,9 +9,24 @@ export default defineConfig({
     exclude: ['dom-expressions', '@lynjs/core', '@lynjs/core/jsx-runtime', '@lynjs/core/rxcore'],
   },
   resolve: {
-    alias: {
-      rxcore: '@lynjs/core/rxcore',
-    },
+    alias: [
+      {
+        find: '@lynjs/core/jsx-runtime',
+        replacement: fileURLToPath(new URL('../core/src/jsx-runtime.ts', import.meta.url)),
+      },
+      {
+        find: '@lynjs/core/rxcore',
+        replacement: fileURLToPath(new URL('../core/src/reactive/index.ts', import.meta.url)),
+      },
+      {
+        find: '@lynjs/core',
+        replacement: fileURLToPath(new URL('../core/src/index.ts', import.meta.url)),
+      },
+      {
+        find: 'rxcore',
+        replacement: fileURLToPath(new URL('../core/src/reactive/index.ts', import.meta.url)),
+      },
+    ],
   },
 
   plugins: [
