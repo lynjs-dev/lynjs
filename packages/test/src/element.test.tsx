@@ -1,16 +1,16 @@
 import { afterEach, describe, expect, it } from 'vitest';
-import { LynElement } from '@lynjs/core';
-import { signal } from '@lynjs/core/rxcore';
+import { LynElement, state } from '@lynjs/core';
 
 class TestElement extends LynElement {
-  private readonly message = signal('hello LynElement');
+  @state private accessor message = 'hello LynElement';
+  @state accessor count = 0;
 
   set text(value: string) {
-    this.message.value = value;
+    this.message = value;
   }
 
   protected render(): Node {
-    return <span>{() => this.message.value}</span>;
+    return <span>{() => this.message}</span>;
   }
 }
 
@@ -41,6 +41,21 @@ describe('LynElement', () => {
     element.text = 'hello reactive LynElement';
 
     expect(element.querySelector('span')?.textContent).toBe('hello reactive LynElement');
+  });
+
+  it('인스턴스와 프로퍼티별로 서로 다른 상태를 관리한다', () => {
+    const first = document.createElement(tagName) as TestElement;
+    const second = document.createElement(tagName) as TestElement;
+
+    first.text = 'first';
+    first.count = 1;
+    second.count = 2;
+    document.body.append(first, second);
+
+    expect(first.count).toBe(1);
+    expect(second.count).toBe(2);
+    expect(first.textContent).toBe('first');
+    expect(second.textContent).toBe('hello LynElement');
   });
 
   it('연결 해제 시 Effect 구독을 해제하고 재연결 시 Scope와 DOM을 재사용한다', () => {

@@ -47,6 +47,7 @@ export default defineConfig({
           ],
         ],
         plugins: [
+          ['@babel/plugin-proposal-decorators', { version: '2023-11' }],
           [
             'babel-plugin-jsx-dom-expressions',
             {
