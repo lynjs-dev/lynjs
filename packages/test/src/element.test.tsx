@@ -2,8 +2,8 @@ import { afterEach, describe, expect, it } from 'vitest';
 import { LynElement, state } from '@lynjs/core';
 
 class TestElement extends LynElement {
-  @state private accessor message = 'hello LynElement';
-  @state accessor count = 0;
+  @state private message = 'hello LynElement';
+  @state count = 0;
 
   set text(value: string) {
     this.message = value;
@@ -14,10 +14,28 @@ class TestElement extends LynElement {
   }
 }
 
+class ConstructorStateElement extends LynElement {
+  @state message = 'field initializer';
+
+  constructor() {
+    super();
+    this.message = 'constructor initializer';
+  }
+
+  protected render(): Node {
+    return <span>{() => this.message}</span>;
+  }
+}
+
 const tagName = 'lyn-test-element';
+const constructorStateTagName = 'lyn-constructor-state-element';
 
 if (!customElements.get(tagName)) {
   customElements.define(tagName, TestElement);
+}
+
+if (!customElements.get(constructorStateTagName)) {
+  customElements.define(constructorStateTagName, ConstructorStateElement);
 }
 
 describe('LynElement', () => {
@@ -56,6 +74,26 @@ describe('LynElement', () => {
     expect(second.count).toBe(2);
     expect(first.textContent).toBe('first');
     expect(second.textContent).toBe('hello LynElement');
+  });
+
+  it('일반 필드를 인스턴스의 반응형 accessor로 변환한다', () => {
+    const element = document.createElement(tagName) as TestElement;
+    const descriptor = Object.getOwnPropertyDescriptor(element, 'count');
+
+    expect(descriptor?.get).toBeTypeOf('function');
+    expect(descriptor?.set).toBeTypeOf('function');
+    expect(descriptor?.enumerable).toBe(true);
+    expect(descriptor?.configurable).toBe(true);
+  });
+
+  it('constructor에서 변경한 초기값을 Signal과 렌더링 결과에 반영한다', () => {
+    const element = document.createElement(constructorStateTagName) as ConstructorStateElement;
+
+    expect(element.message).toBe('constructor initializer');
+
+    document.body.appendChild(element);
+
+    expect(element.querySelector('span')?.textContent).toBe('constructor initializer');
   });
 
   it('연결 해제 시 Effect 구독을 해제하고 재연결 시 Scope와 DOM을 재사용한다', () => {
